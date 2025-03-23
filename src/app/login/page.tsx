@@ -46,8 +46,8 @@ export default function LoginPage() {
       }
 
       toast.success("Login successful! Welcome back to EduConnect Pakistan.")
-    } catch (error) {
-      toast.error("Login failed. Invalid email or password. Please try again.")
+    } catch (error: any) {
+      toast.error("Login failed.", error.message)
     } finally {
       setIsLoading(false)
     }
