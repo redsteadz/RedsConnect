@@ -1,26 +1,13 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { BookOpen } from "lucide-react";
+import { useAuth } from "@/context/AuthContext"; // Import useAuth
 
 export default function Navbar() {
-  const [isAuth, setIsAuth] = useState(false);
+  const { isAuth, setIsAuth } = useAuth(); // Get authentication state
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await fetch("/api/auth");
-        if (res.ok) {
-          setIsAuth(true);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    checkAuth();
-  }, []);
 
   const logout = async () => {
     setLoading(true);
@@ -32,6 +19,7 @@ export default function Navbar() {
         },
       });
       if (res.ok) {
+        setIsAuth(false); // Update context
         window.location.href = "/";
       }
     } catch (error) {

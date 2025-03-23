@@ -1,5 +1,4 @@
 "use client";
-
 import type React from "react";
 
 import { useState } from "react";
@@ -24,11 +23,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { useAuth } from "@/context/AuthContext";
 import axios from "axios";
 
 export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const { setIsAuth } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -64,7 +65,7 @@ export default function LoginPage() {
         formData.type === "teacher"
           ? "/dashboard/teacher"
           : "/dashboard/student";
-
+      setIsAuth(true);
       router.push(dashboard);
     } catch (error: any) {
       toast.error("Login failed.", error.message);
