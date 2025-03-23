@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock, Search, Star, User } from "lucide-react";
+import { StudentType } from "@/models/student";
 import {
   currentStudent,
   getSessionsWithTeachers,
@@ -15,6 +16,7 @@ import {
   type Session,
   type Teacher,
 } from "@/lib/mock-data";
+import axios from "axios";
 
 export default function StudentDashboard() {
   const [activeTab, setActiveTab] = useState("sessions");
@@ -28,13 +30,20 @@ export default function StudentDashboard() {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [filteredTeachers, setFilteredTeachers] = useState<Teacher[]>([]);
 
+  const [curStd, setStd] = useState<StudentType>();
   useEffect(() => {
-    // Load data
-    const sessionsWithTeachers = getSessionsWithTeachers();
-    setSessions(sessionsWithTeachers);
-    setFilteredSessions(sessionsWithTeachers);
-    setTeachers(allTeachers);
-    setFilteredTeachers(allTeachers);
+    // Load profile data
+    const fetchData = async () => {
+      const resp = await axios.get("/api/me");
+      const std: StudentType = resp.data.profile;
+      setStd(std);
+      const sessionsWithTeachers = getSessionsWithTeachers();
+      setSessions(sessionsWithTeachers);
+      setFilteredSessions(sessionsWithTeachers);
+      setTeachers(allTeachers);
+      setFilteredTeachers(allTeachers);
+    };
+    fetchData();
   }, []);
 
   // Handle search
@@ -106,37 +115,41 @@ export default function StudentDashboard() {
       {/* Student Profile */}
       <div className="mb-8">
         <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">
-          <Avatar className="w-24 h-24">
-            <AvatarImage src="/icon.svg" alt={currentStudent.name} />
-            <AvatarFallback className="text-2xl">
-              {currentStudent.name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")}
-            </AvatarFallback>
-          </Avatar>
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold">{currentStudent.name}</h1>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-muted-foreground">
-              <div className="flex items-center">
-                <User className="mr-2 h-4 w-4" />
-                <span>
-                  {currentStudent.educationLevel.charAt(0).toUpperCase() +
-                    currentStudent.educationLevel.slice(1)}{" "}
-                  Student
-                </span>
+          {curStd && (
+            <>
+              <Avatar className="w-24 h-24">
+                <AvatarImage src="/icon.svg" alt={curStd.name} />
+                <AvatarFallback className="text-2xl">
+                  {curStd.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")}
+                </AvatarFallback>
+              </Avatar>
+              <div className="space-y-2">
+                <h1 className="text-3xl font-bold">{curStd.name}</h1>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-muted-foreground">
+                  <div className="flex items-center">
+                    <User className="mr-2 h-4 w-4" />
+                    <span>
+                      {curStd.educationLevel.charAt(0).toUpperCase() +
+                        curStd.educationLevel.slice(1)}{" "}
+                      Student
+                    </span>
+                  </div>
+                  <div className="hidden sm:block">•</div>
+                  <div>{curStd.institution}</div>
+                </div>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {curStd.subjects.map((subject) => (
+                    <Badge key={subject} variant="secondary">
+                      {subject}
+                    </Badge>
+                  ))}
+                </div>
               </div>
-              <div className="hidden sm:block">•</div>
-              <div>{currentStudent.institution}</div>
-            </div>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {currentStudent.subjects.map((subject) => (
-                <Badge key={subject} variant="secondary">
-                  {subject}
-                </Badge>
-              ))}
-            </div>
-          </div>
+            </>
+          )}
         </div>
       </div>
 

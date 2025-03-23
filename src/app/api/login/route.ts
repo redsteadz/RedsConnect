@@ -28,11 +28,9 @@ export async function POST(req: NextRequest) {
           { status: 401 },
         );
       }
-      const token = jwt.sign(
-        { id: profile._id, type },
-        process.env.JWT_SECRET!,
-        { expiresIn: "1h" },
-      );
+      const token = jwt.sign({ id: profile._id }, process.env.JWT_SECRET!, {
+        expiresIn: "1h",
+      });
       const resp: NextResponse = NextResponse.json(
         { message: "Profile found", profile, token },
         { status: 200 },
