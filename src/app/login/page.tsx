@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
+import axios from "axios"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -32,14 +33,10 @@ export default function LoginPage() {
       // Here you would normally make an API call to authenticate the user
       // For now, we'll simulate a successful login
       await new Promise((resolve) => setTimeout(resolve, 1500))
-
+      const resp = await axios.post("/api/teachers/login", formData)
       // For demo purposes, let's redirect to different dashboards based on email
-      if (formData.email.includes("teacher")) {
-        router.push("/dashboard/teacher")
-      } else if (formData.email.includes("admin")) {
-        router.push("/dashboard/admin")
-      } else {
-        router.push("/dashboard/student")
+      if (resp.status !== 200) {
+        toast.error("Login failed. Invalid email or password. Please try again.")
       }
 
       toast.success("Login successful! Welcome back to EduConnect Pakistan.")

@@ -9,6 +9,7 @@ import { Schema , model, models } from 'mongoose';
 //availability
 //teachingPref
 
+//TODO: Split schema into credentials and profile
 export interface TeacherType {
   _id?: string;
   name: string;
