@@ -8,22 +8,19 @@ const privatePaths = ["/dashboard", "/profile"];
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const token = request.cookies.get("token")?.value || "";
-  const type = request.cookies.get("type");
+  const type = request.cookies.get("type")?.value || "";
   //console.log("path, token, type", path, token, type);
   // IF logged in, than
   if (publicPaths.includes(path) && token && type) {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/dashboard/" + type, request.url));
   }
-  // Dashboard and logged in
-  if (privatePaths[0] + type === path && token && type) {
-    return NextResponse.next();
-  }
-  // Profile and logged inA
-  if (privatePaths[1] + type === path && token && type) {
-    return NextResponse.next();
-  }
+  // Dashboard and logged out
   if (path.includes("/dashboard") && !token) {
     return NextResponse.redirect(new URL("/login", request.url));
+  }
+  // Dashboard and logged in but wrong type
+  if (path.includes("/dashboard") && token && type && !path.includes(type)) {
+    return NextResponse.redirect(new URL("/dashboard/" + type, request.url));
   }
 }
 
