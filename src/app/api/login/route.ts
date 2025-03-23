@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
         { status: 200 },
       );
       resp.cookies.set("token", token, { httpOnly: true, sameSite: "strict" });
+      resp.cookies.set("type", type, { httpOnly: true, sameSite: "strict" });
       return resp;
     }
     return NextResponse.json({ message: "Profile not found" }, { status: 404 });
