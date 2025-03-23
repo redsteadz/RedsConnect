@@ -19,7 +19,7 @@ export default function Navbar() {
         },
       });
       if (res.ok) {
-        setIsAuth(false); // Update context
+        setIsAuth(false, "", ""); // Update context
         window.location.href = "/";
       }
     } catch (error) {
@@ -53,7 +53,7 @@ export default function Navbar() {
           </Link>
         </nav>
         <div className="ml-2 flex items-center gap-2">
-          {isAuth ? (
+          {isAuth.auth ? (
             <Button
               variant="destructive"
               size="sm"

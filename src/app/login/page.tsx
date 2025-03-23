@@ -65,7 +65,7 @@ export default function LoginPage() {
         formData.type === "teacher"
           ? "/dashboard/teacher"
           : "/dashboard/student";
-      setIsAuth(true);
+      setIsAuth(true, resp.data.token, resp.data.type);
       router.push(dashboard);
     } catch (error: any) {
       toast.error("Login failed.", error.message);

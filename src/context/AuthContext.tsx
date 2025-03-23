@@ -2,16 +2,29 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { checkAuth } from "@/util/isAuth";
 
-interface AuthContextType {
-  isAuth: boolean;
-  setIsAuth: (auth: boolean) => void;
+interface AuthState {
+  auth: boolean;
+  token: string;
+  type: string;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+interface AuthContextType {
+  isAuth: AuthState;
+  setIsAuth: (auth: boolean, token: string, type: string) => void;
+}
+
+const defState: AuthState = { auth: false, token: "", type: "" };
+
+const AuthContext = createContext<AuthContextType>({
+  isAuth: defState,
+  setIsAuth: () => {},
+});
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isAuth, setIsAuth] = useState(false);
-
+  const [isAuth, setAuthState] = useState<AuthState>(defState);
+  const setIsAuth = (auth: boolean, token: string, type: string) => {
+    setAuthState({ auth, token, type });
+  };
   useEffect(() => {
     checkAuth(setIsAuth);
   }, []);
