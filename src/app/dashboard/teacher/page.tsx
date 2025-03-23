@@ -1,13 +1,19 @@
-"use client"
+"use client";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Calendar, Clock, DollarSign, Users } from "lucide-react"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Calendar, Clock, DollarSign, Users } from "lucide-react";
 
 export default function TeacherDashboard() {
   return (
-    <div className="container py-10">
+    <div className=" container py-10">
       <h1 className="text-3xl font-bold mb-6">Teacher Dashboard</h1>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
@@ -18,7 +24,9 @@ export default function TeacherDashboard() {
                 <Users className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Total Students</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  Total Students
+                </p>
                 <h3 className="text-2xl font-bold">24</h3>
               </div>
             </div>
@@ -32,7 +40,9 @@ export default function TeacherDashboard() {
                 <Calendar className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Upcoming Sessions</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  Upcoming Sessions
+                </p>
                 <h3 className="text-2xl font-bold">8</h3>
               </div>
             </div>
@@ -46,7 +56,9 @@ export default function TeacherDashboard() {
                 <Clock className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Hours Taught</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  Hours Taught
+                </p>
                 <h3 className="text-2xl font-bold">156</h3>
               </div>
             </div>
@@ -60,7 +72,9 @@ export default function TeacherDashboard() {
                 <DollarSign className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <p className="text-sm font-medium text-muted-foreground">Total Earnings</p>
+                <p className="text-sm font-medium text-muted-foreground">
+                  Total Earnings
+                </p>
                 <h3 className="text-2xl font-bold">Rs. 45,600</h3>
               </div>
             </div>
@@ -80,7 +94,9 @@ export default function TeacherDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Upcoming Sessions</CardTitle>
-              <CardDescription>View and manage your scheduled tutoring sessions</CardDescription>
+              <CardDescription>
+                View and manage your scheduled tutoring sessions
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -89,7 +105,9 @@ export default function TeacherDashboard() {
                   <div className="flex justify-between items-start">
                     <div>
                       <h3 className="font-medium">Mathematics - Calculus</h3>
-                      <p className="text-sm text-muted-foreground">Student: Ahmed Khan</p>
+                      <p className="text-sm text-muted-foreground">
+                        Student: Ahmed Khan
+                      </p>
                       <div className="flex items-center mt-2 text-sm">
                         <Calendar className="h-4 w-4 mr-1" />
                         <span>March 25, 2025</span>
@@ -112,7 +130,9 @@ export default function TeacherDashboard() {
                   <div className="flex justify-between items-start">
                     <div>
                       <h3 className="font-medium">Physics - Mechanics</h3>
-                      <p className="text-sm text-muted-foreground">Student: Sara Ahmed</p>
+                      <p className="text-sm text-muted-foreground">
+                        Student: Sara Ahmed
+                      </p>
                       <div className="flex items-center mt-2 text-sm">
                         <Calendar className="h-4 w-4 mr-1" />
                         <span>March 26, 2025</span>
@@ -139,15 +159,21 @@ export default function TeacherDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Session Requests</CardTitle>
-              <CardDescription>Review and respond to session requests from students</CardDescription>
+              <CardDescription>
+                Review and respond to session requests from students
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="border rounded-lg p-4">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-medium">Chemistry - Organic Chemistry</h3>
-                      <p className="text-sm text-muted-foreground">Student: Fatima Malik</p>
+                      <h3 className="font-medium">
+                        Chemistry - Organic Chemistry
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        Student: Fatima Malik
+                      </p>
                       <div className="flex items-center mt-2 text-sm">
                         <Calendar className="h-4 w-4 mr-1" />
                         <span>March 28, 2025</span>
@@ -174,7 +200,9 @@ export default function TeacherDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Earnings Overview</CardTitle>
-              <CardDescription>Track your earnings and payment status</CardDescription>
+              <CardDescription>
+                Track your earnings and payment status
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -183,7 +211,9 @@ export default function TeacherDashboard() {
                   <Card>
                     <CardContent className="p-6">
                       <div className="space-y-2">
-                        <p className="text-sm font-medium text-muted-foreground">This Month</p>
+                        <p className="text-sm font-medium text-muted-foreground">
+                          This Month
+                        </p>
                         <h3 className="text-2xl font-bold">Rs. 12,800</h3>
                       </div>
                     </CardContent>
@@ -192,7 +222,9 @@ export default function TeacherDashboard() {
                   <Card>
                     <CardContent className="p-6">
                       <div className="space-y-2">
-                        <p className="text-sm font-medium text-muted-foreground">Last Month</p>
+                        <p className="text-sm font-medium text-muted-foreground">
+                          Last Month
+                        </p>
                         <h3 className="text-2xl font-bold">Rs. 15,200</h3>
                       </div>
                     </CardContent>
@@ -201,7 +233,9 @@ export default function TeacherDashboard() {
                   <Card>
                     <CardContent className="p-6">
                       <div className="space-y-2">
-                        <p className="text-sm font-medium text-muted-foreground">Pending Payments</p>
+                        <p className="text-sm font-medium text-muted-foreground">
+                          Pending Payments
+                        </p>
                         <h3 className="text-2xl font-bold">Rs. 3,600</h3>
                       </div>
                     </CardContent>
@@ -216,7 +250,9 @@ export default function TeacherDashboard() {
           <Card>
             <CardHeader>
               <CardTitle>Profile Management</CardTitle>
-              <CardDescription>Update your profile information and teaching preferences</CardDescription>
+              <CardDescription>
+                Update your profile information and teaching preferences
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <Button>Edit Profile</Button>
@@ -225,6 +261,5 @@ export default function TeacherDashboard() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
-

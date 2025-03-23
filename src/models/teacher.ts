@@ -14,12 +14,13 @@ export interface TeacherType {
   _id?: string;
   name: string;
   email: string;
-  password: string;
+  password?: string;
   qualifications: string[];
   bio: string;
   yoe: number;
   subjects: string[];
   hourlyRate: number;
+  averageRating?: number;
   availability: ("online" | "in-person" | "both")[];
 }
 
@@ -32,6 +33,7 @@ const teacherSchema = new Schema({
   yoe: { type: Number, required: true },
   subjects: [{ type: String, required: true }],
   hourlyRate: { type: Number, required: true },
+  averageRating: { type: Number },
   availability: [{ type: String, enum: ["online", "in-person"], required: true }],
 })
 
