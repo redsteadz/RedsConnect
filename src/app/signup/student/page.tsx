@@ -12,6 +12,8 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { toast } from "sonner"
+import { StudentType } from "@/models/student"
+import axios from "axios"
 
 export default function StudentSignupPage() {
   const router = useRouter()
@@ -21,8 +23,7 @@ export default function StudentSignupPage() {
     email: "",
     password: "",
     confirmPassword: "",
-    phone: "",
-    educationLevel: "",
+    educationLevel: "school" as "school" | "undergraduate" | "postgraduate",
     institution: "",
     subjects: [] as string[],
   })
@@ -83,8 +84,25 @@ export default function StudentSignupPage() {
       // For now, we'll simulate a successful registration
       await new Promise((resolve) => setTimeout(resolve, 1500))
 
-      toast.success("Registration successful! Your account has been created. You can now login.")
+      const studentData: StudentType = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        educationLevel: formData.educationLevel,
+        institution: formData.institution,
+        subjects: formData.subjects,
+      }
 
+      const resp = await axios.post('/api/students/signup', studentData, {
+        validateStatus: (status) => status < 500
+      });
+
+      if (resp.status !== 200) {
+        toast.error("Registration failed:" + resp.data.message)
+        throw new Error(resp.data.message)
+      }
+
+      toast.success("Registration successful! Your account has been created. You can now login.")
       // Redirect to login page after successful registration
       router.push("/login")
     } catch (error) {
@@ -163,17 +181,6 @@ export default function StudentSignupPage() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
-                <Input
-                  id="phone"
-                  name="phone"
-                  placeholder="Enter your phone number"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
             </div>
 
             <div className="space-y-4">
@@ -191,13 +198,9 @@ export default function StudentSignupPage() {
                       <SelectValue placeholder="Select education level" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="primary">Primary School</SelectItem>
-                      <SelectItem value="middle">Middle School</SelectItem>
-                      <SelectItem value="high">High School</SelectItem>
-                      <SelectItem value="intermediate">Intermediate</SelectItem>
-                      <SelectItem value="bachelors">Bachelor's Degree</SelectItem>
-                      <SelectItem value="masters">Master's Degree</SelectItem>
-                      <SelectItem value="phd">PhD</SelectItem>
+                      <SelectItem value="school">School</SelectItem>
+                      <SelectItem value="undergraduate">Undergraduate</SelectItem>
+                      <SelectItem value="postgraduate">Postgraduate</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>

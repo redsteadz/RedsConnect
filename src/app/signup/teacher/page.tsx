@@ -115,15 +115,20 @@ export default function TeacherSignupPage() {
         subjects: formData.subjects,
         availability: formData.availability,
       }
-      const resp = await axios.post("/api/teachers/signup", teacherObject)
+      const resp = await axios.post("/api/teachers/signup", teacherObject, {
+        validateStatus: (status) => status < 500,
+      })
+      //console.log(resp)
       if (resp.status !== 200) {
-        throw new Error("Failed to create")
+        toast.error("Registration failed:" + resp.data.message)
+        throw new Error(resp.data.message)
       }
       toast.success("Registration successful! Your account has been created. You can now login.")
       // Redirect to login page after successful registration
       router.push("/login")
-    } catch (error) {
-      toast.error("Registration failed. There was an error creating your account. Please try again.")
+    } catch (error: any) {
+      //console.log(error)
+      toast.error("Registration failed." + error.message)
     } finally {
       setIsLoading(false)
     }
