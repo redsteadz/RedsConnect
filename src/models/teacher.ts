@@ -10,6 +10,7 @@ import { Schema , model, models } from 'mongoose';
 //teachingPref
 
 export interface TeacherType {
+  _id?: string;
   name: string;
   email: string;
   password: string;
@@ -30,7 +31,7 @@ const teacherSchema = new Schema({
   yoe: { type: Number, required: true },
   subjects: [{ type: String, required: true }],
   hourlyRate: { type: Number, required: true },
-  availability: [{ type: String, enum: ["online", "in-person", "both"], required: true }],
+  availability: [{ type: String, enum: ["online", "in-person"], required: true }],
 })
 
 const teacherModel = models.teacher ?? model("teacher", teacherSchema);

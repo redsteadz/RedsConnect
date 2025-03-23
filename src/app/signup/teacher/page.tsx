@@ -11,8 +11,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Slider } from "@/components/ui/slider"
 import { Checkbox } from "@/components/ui/checkbox"
 import { toast } from "sonner"
+import { TeacherType } from "@/models/teacher"
+
+import axios from "axios"
 
 export default function TeacherSignupPage() {
   const router = useRouter()
@@ -22,12 +26,12 @@ export default function TeacherSignupPage() {
     email: "",
     password: "",
     confirmPassword: "",
-    phone: "",
     qualification: "",
+    hourlyRate: 500,
     experience: "",
     bio: "",
     subjects: [] as string[],
-    teachingMode: "",
+    availability: ["online" as "online" | "in-person" | "both"],
   })
 
   const subjects = [
@@ -51,6 +55,16 @@ export default function TeacherSignupPage() {
   }
 
   const handleSelectChange = (name: string, value: string) => {
+    // Dealing with availability
+    if (name === "availability") {
+      if (value === "both") {
+        return setFormData((prev) => ({ ...prev, availability: ["online", "in-person"] }))
+      } else if (value === "online") {
+        return setFormData((prev) => ({ ...prev, availability: ["online"] }))
+      } else {
+        return setFormData((prev) => ({ ...prev, availability: ["in-person"] }))
+      }
+    }
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
@@ -79,15 +93,33 @@ export default function TeacherSignupPage() {
       return
     }
 
+    if (formData.hourlyRate < 500 || formData.hourlyRate > 5000) {
+      toast.error("Hourly rate must be between 500 and 5000 PKR.")
+      return
+    }
+
     setIsLoading(true)
 
     try {
       // Here you would normally make an API call to register the teacher
       // For now, we'll simulate a successful registration
       await new Promise((resolve) => setTimeout(resolve, 1500))
-
+      const teacherObject: TeacherType = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        qualifications: formData.qualification.split(' ').map((q) => q.trim()),
+        yoe: Number(formData.experience),
+        hourlyRate: formData.hourlyRate,
+        bio: formData.bio,
+        subjects: formData.subjects,
+        availability: formData.availability,
+      }
+      const resp = await axios.post("/api/teachers/signup", teacherObject)
+      if (resp.status !== 200) {
+        throw new Error("Failed to create")
+      }
       toast.success("Registration successful! Your account has been created. You can now login.")
-
       // Redirect to login page after successful registration
       router.push("/login")
     } catch (error) {
@@ -165,18 +197,6 @@ export default function TeacherSignupPage() {
                   />
                 </div>
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
-                <Input
-                  id="phone"
-                  name="phone"
-                  placeholder="Enter your phone number"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
             </div>
 
             <div className="space-y-4">
@@ -207,7 +227,27 @@ export default function TeacherSignupPage() {
                   />
                 </div>
               </div>
-
+              <div className="space-y-2">
+                <Label htmlFor="hourlyRate">Hourly Rate (PKR)</Label>
+                <Input
+                  id="hourlyRate"
+                  name="hourlyRate"
+                  value={formData.hourlyRate}
+                  required
+                  onChange={handleChange}
+                  min={500}
+                  max={5000}
+                />
+                <Slider
+                  id="hourlyRate"
+                  name="hourlyRate"
+                  min={500}
+                  max={5000}
+                  defaultValue={[formData.hourlyRate]}
+                  value={[formData.hourlyRate]}
+                  onValueChange={(e) => setFormData((prev) => ({ ...prev, hourlyRate: e[0] }))}
+                />
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="bio">Bio</Label>
                 <Textarea
@@ -242,8 +282,12 @@ export default function TeacherSignupPage() {
               <div className="space-y-2">
                 <Label htmlFor="teachingMode">Preferred Teaching Mode</Label>
                 <Select
-                  value={formData.teachingMode}
-                  onValueChange={(value) => handleSelectChange("teachingMode", value)}
+                  value={
+                    formData.availability.length === 1
+                      ? formData.availability[0]
+                      : "both"
+                  }
+                  onValueChange={(value) => handleSelectChange("availability", value)}
                   required
                 >
                   <SelectTrigger>

@@ -8,9 +8,9 @@ export function Navbar() {
       <div className="container flex h-16 items-center px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2">
           <BookOpen className="h-6 w-6" />
-          <span className="text-lg font-semibold">EduConnect</span>
+          <span className="text-lg hidden sm:block font-semibold">EduConnect</span>
         </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
+        <nav className="ml-auto flex gap-2 sm:gap-6">
           <Link href="/about" className="text-sm font-medium hover:underline underline-offset-4">
             About
           </Link>
@@ -18,7 +18,7 @@ export function Navbar() {
             Contact
           </Link>
         </nav>
-        <div className="ml-4 flex items-center gap-2">
+        <div className="ml-2 flex items-center gap-2">
           <Link href="/login">
             <Button variant="ghost" size="sm">
               Login
