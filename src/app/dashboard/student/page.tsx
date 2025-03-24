@@ -7,16 +7,44 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, Search, Star, User } from "lucide-react";
-import { StudentType } from "@/models/student";
 import {
-  currentStudent,
+  Calendar as CalendarIcon,
+  Clock,
+  Search,
+  Star,
+  User,
+} from "lucide-react";
+import { StudentType } from "@/models/student";
+import { TeacherType } from "@/models/teacher";
+import { ComboboxDemo } from "@/components/combobox";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import { DatePickerDemo } from "@/components/datepicker";
+
+import {
   getSessionsWithTeachers,
   teachers as allTeachers,
   type Session,
   type Teacher,
 } from "@/lib/mock-data";
 import axios from "axios";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import TeacherCard from "@/components/teacher/card";
 
 export default function StudentDashboard() {
   const [activeTab, setActiveTab] = useState("sessions");
@@ -27,8 +55,9 @@ export default function StudentDashboard() {
   const [filteredSessions, setFilteredSessions] = useState<
     (Session & { teacher: Teacher })[]
   >([]);
-  const [teachers, setTeachers] = useState<Teacher[]>([]);
-  const [filteredTeachers, setFilteredTeachers] = useState<Teacher[]>([]);
+  const [teachers, setTeachers] = useState<TeacherType[]>([]);
+
+  const [filteredTeachers, setFilteredTeachers] = useState<TeacherType[]>([]);
 
   const [curStd, setStd] = useState<StudentType>();
   useEffect(() => {
@@ -37,10 +66,15 @@ export default function StudentDashboard() {
       const resp = await axios.get("/api/me");
       const std: StudentType = resp.data.profile;
       setStd(std);
+
       const sessionsWithTeachers = getSessionsWithTeachers();
       setSessions(sessionsWithTeachers);
       setFilteredSessions(sessionsWithTeachers);
-      setTeachers(allTeachers);
+
+      // Get all teachers data
+      const tch: TeacherType[] = (await axios.get("/api/teachers/getAll")).data
+        .profiles;
+      setTeachers(tch);
       setFilteredTeachers(allTeachers);
     };
     fetchData();
@@ -229,7 +263,7 @@ export default function StudentDashboard() {
 
                       <div className="flex flex-col gap-1 text-xs text-muted-foreground mb-3">
                         <div className="flex items-center">
-                          <Calendar className="mr-2 h-3 w-3" />
+                          <CalendarIcon className="mr-2 h-3 w-3" />
                           <span>{formatDate(session.dateTime)}</span>
                         </div>
                         <div className="flex items-center">
@@ -306,65 +340,11 @@ export default function StudentDashboard() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {filteredTeachers.map((teacher) => (
-                  <Card key={teacher._id} className="overflow-hidden">
-                    <CardContent className="p-6">
-                      <div className="flex items-start gap-4">
-                        <Avatar className="w-12 h-12">
-                          <AvatarImage
-                            src="/placeholder.svg"
-                            alt={teacher.name}
-                          />
-                          <AvatarFallback>
-                            {teacher.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1">
-                          <h3 className="font-semibold">{teacher.name}</h3>
-                          <div className="flex items-center text-muted-foreground text-sm">
-                            <Star className="h-4 w-4 text-yellow-500 mr-1" />
-                            <span>
-                              {teacher.averageRating} • {teacher.yoe} years
-                              experience
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mt-4">
-                        <p className="text-sm text-muted-foreground line-clamp-2">
-                          {teacher.bio}
-                        </p>
-                      </div>
-
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {teacher.subjects.slice(0, 3).map((subject) => (
-                          <Badge key={subject} variant="outline">
-                            {subject}
-                          </Badge>
-                        ))}
-                        {teacher.subjects.length > 3 && (
-                          <Badge variant="outline">
-                            +{teacher.subjects.length - 3} more
-                          </Badge>
-                        )}
-                      </div>
-
-                      <div className="mt-4 flex items-center justify-between">
-                        <div className="text-sm font-medium">
-                          Rs. {teacher.hourlyRate}/hr
-                        </div>
-                        <div className="flex gap-2">
-                          <Button size="sm" variant="outline">
-                            Profile
-                          </Button>
-                          <Button size="sm">Book Session</Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <TeacherCard
+                    key={teacher._id}
+                    teacher={teacher}
+                    stdID={curStd?._id}
+                  />
                 ))}
               </div>
             )}

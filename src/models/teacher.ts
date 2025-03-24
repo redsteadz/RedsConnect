@@ -1,9 +1,9 @@
-import { Schema , model, models } from 'mongoose';
+import { Schema, model, models } from "mongoose";
 
-//### Tutors Schema 
-//names 
+//### Tutors Schema
+//names
 //qualifications
-//bio 
+//bio
 //subjects
 //hourlyRate
 //availability
@@ -33,9 +33,11 @@ const teacherSchema = new Schema({
   yoe: { type: Number, required: true },
   subjects: [{ type: String, required: true }],
   hourlyRate: { type: Number, required: true },
-  averageRating: { type: Number },
-  availability: [{ type: String, enum: ["online", "in-person"], required: true }],
-})
+  averageRating: { type: Number, default: 0 },
+  availability: [
+    { type: String, enum: ["online", "in-person"], required: true },
+  ],
+});
 
 const teacherModel = models.teacher ?? model("teacher", teacherSchema);
 
