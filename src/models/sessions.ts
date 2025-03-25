@@ -1,10 +1,13 @@
 import { Schema, model, models } from "mongoose";
+import { TeacherType } from "@/models/teacher";
+import { StudentType } from "@/models/student";
 
 // This is the schema that holds information about the session
 export interface SessionType {
+  _id?: string;
   // The two ppls within the session
-  teacherId: string;
-  studentId: string;
+  teacherId: string | TeacherType;
+  studentId: string | StudentType;
   // The date and time of the session
   dateTime: string;
   duration: number;

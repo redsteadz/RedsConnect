@@ -9,15 +9,29 @@ export async function GET(req: NextRequest) {
     if (!token) {
       return NextResponse.redirect("/login");
     }
-    const stdID = getDatafromJWT(token).id;
-    const sessions: SessionType[] = await sessionModel.find({
-      studentId: stdID,
-    }).populate("teacherId", "-password -email");
+    const id = getDatafromJWT(token).id;
+    let sessions: SessionType[] = [];
+    if (type === "student") {
+      sessions = await sessionModel
+        .find({
+          studentId: id,
+        })
+        .populate("teacherId", "-password -email");
+    } else if (type === "teacher") {
+      console.log("teacher", id, type);
+      sessions = await sessionModel
+        .find({
+          teacherId: id,
+        })
+        .populate("studentId", "-password -email");
+    }
+
     return NextResponse.json(
       { message: "Sessions found", sessions },
       { status: 200 },
     );
   } catch (error) {
+    console.log(error.message);
     return NextResponse.json({ message: error.message }, { status: 400 });
   }
 }

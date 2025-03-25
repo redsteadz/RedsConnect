@@ -170,10 +170,7 @@ export default function TeacherCard({
               Profile
             </Button>
             <Drawer>
-              <DrawerTrigger>
-                {" "}
-                <Button>Book Session</Button>
-              </DrawerTrigger>
+              <DrawerTrigger> Book Session</DrawerTrigger>
               <DrawerContent>
                 <div className="mx-auto w-full max-w-sm">
                   <DrawerHeader>

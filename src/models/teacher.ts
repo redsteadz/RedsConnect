@@ -13,7 +13,7 @@ import { Schema, model, models } from "mongoose";
 export interface TeacherType {
   _id?: string;
   name: string;
-  email: string;
+  email?: string;
   password?: string;
   qualifications: string[];
   bio: string;

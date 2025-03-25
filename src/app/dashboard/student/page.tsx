@@ -24,17 +24,13 @@ import {
 } from "@/lib/mock-data";
 import axios from "axios";
 import TeacherCard from "@/components/teacher/card";
-
+import { SessionType } from "@/models/sessions";
 
 export default function StudentDashboard() {
   const [activeTab, setActiveTab] = useState("sessions");
   const [searchQuery, setSearchQuery] = useState("");
-  const [sessions, setSessions] = useState<(Session & { teacher: Teacher })[]>(
-    [],
-  );
-  const [filteredSessions, setFilteredSessions] = useState<
-    (Session & { teacher: Teacher })[]
-  >([]);
+  const [sessions, setSessions] = useState<SessionType[]>([]);
+  const [filteredSessions, setFilteredSessions] = useState<SessionType[]>([]);
   const [teachers, setTeachers] = useState<TeacherType[]>([]);
 
   const [filteredTeachers, setFilteredTeachers] = useState<TeacherType[]>([]);
@@ -46,8 +42,8 @@ export default function StudentDashboard() {
       const resp = await axios.get("/api/me");
       const std: StudentType = resp.data.profile;
       setStd(std);
-
-      const sessionsWithTeachers = getSessionsWithTeachers();
+      const resp2 = await axios.get("/api/sessions/getAll");
+      const sessionsWithTeachers: SessionType[] = resp2.data.sessions;
       setSessions(sessionsWithTeachers);
       setFilteredSessions(sessionsWithTeachers);
 
@@ -74,7 +70,8 @@ export default function StudentDashboard() {
       const filtered = sessions.filter(
         (session) =>
           session.subject.toLowerCase().includes(query) ||
-          session.teacher.name.toLowerCase().includes(query),
+          (typeof session.teacherId === "object" &&
+            session.teacherId.name.toLowerCase().includes(query)),
       );
       setFilteredSessions(filtered);
     } else {
@@ -224,31 +221,35 @@ export default function StudentDashboard() {
                       </h3>
 
                       <div className="flex items-center mt-2 mb-3">
-                        <Avatar className="w-6 h-6 mr-2">
-                          <AvatarImage
-                            src="/placeholder.svg"
-                            alt={session.teacher.name}
-                          />
-                          <AvatarFallback className="text-xs">
-                            {session.teacher.name
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="text-sm text-muted-foreground">
-                          {session.teacher.name}
-                        </span>
+                        {typeof session.teacherId === "object" && (
+                          <div>
+                            <Avatar className="w-6 h-6 mr-2">
+                              <AvatarImage
+                                src="/placeholder.svg"
+                                alt={session.teacherId.name}
+                              />
+                              <AvatarFallback className="text-xs">
+                                {session.teacherId.name
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")}
+                              </AvatarFallback>
+                            </Avatar>
+                            <span className="text-sm text-muted-foreground">
+                              {session.teacherId.name}
+                            </span>
+                          </div>
+                        )}
                       </div>
 
                       <div className="flex flex-col gap-1 text-xs text-muted-foreground mb-3">
                         <div className="flex items-center">
                           <CalendarIcon className="mr-2 h-3 w-3" />
-                          <span>{formatDate(session.dateTime)}</span>
+                          <span>{formatDate(new Date(session.dateTime))}</span>
                         </div>
                         <div className="flex items-center">
                           <Clock className="mr-2 h-3 w-3" />
-                          <span>{formatTime(session.dateTime)}</span>
+                          <span>{formatTime(new Date(session.dateTime))}</span>
                         </div>
                       </div>
 

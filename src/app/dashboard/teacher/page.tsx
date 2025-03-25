@@ -10,8 +10,27 @@ import {
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, Clock, DollarSign, Users } from "lucide-react";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { SessionType } from "@/models/sessions";
 
 export default function TeacherDashboard() {
+  // Get all the sessions
+  const [upcomingSessions, setUpcomingSessions] = useState<SessionType[]>([]);
+  const [sessionRequest, setSessionRequests] = useState<SessionType[]>([]);
+  useEffect(() => {
+    const fetchSessions = async () => {
+      const resp = await axios.get("/api/sessions/getAll");
+      const sessions: SessionType[] = resp.data.sessions;
+      // Filter out the pending sessions
+      const sessionsRequests = sessions.filter(
+        (session) => session.status === "pending",
+      );
+      setSessionRequests(sessionsRequests);
+    };
+    fetchSessions();
+  }, []);
+
   return (
     <div className=" container py-10">
       <h1 className="text-3xl font-bold mb-6">Teacher Dashboard</h1>
@@ -165,32 +184,34 @@ export default function TeacherDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="border rounded-lg p-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-medium">
-                        Chemistry - Organic Chemistry
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        Student: Fatima Malik
-                      </p>
-                      <div className="flex items-center mt-2 text-sm">
-                        <Calendar className="h-4 w-4 mr-1" />
-                        <span>March 28, 2025</span>
-                        <Clock className="h-4 w-4 ml-3 mr-1" />
-                        <span>5:00 PM - 6:30 PM</span>
+                {sessionRequest.map((session) => (
+                  <div key={session._id} className="border rounded-lg p-4">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-medium">{session.subject}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          Student:{" "}
+                          {typeof session.studentId === "object" &&
+                            session.studentId.name}
+                        </p>
+                        <div className="flex items-center mt-2 text-sm">
+                          <Calendar className="h-4 w-4 mr-1" />
+                          <span>March 28, 2025</span>
+                          <Clock className="h-4 w-4 ml-3 mr-1" />
+                          <span>5:00 PM - 6:30 PM</span>
+                        </div>
+                      </div>
+                      <div className="flex space-x-2">
+                        <Button variant="default" size="sm">
+                          Accept
+                        </Button>
+                        <Button variant="outline" size="sm">
+                          Decline
+                        </Button>
                       </div>
                     </div>
-                    <div className="flex space-x-2">
-                      <Button variant="default" size="sm">
-                        Accept
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        Decline
-                      </Button>
-                    </div>
                   </div>
-                </div>
+                ))}
               </div>
             </CardContent>
           </Card>
