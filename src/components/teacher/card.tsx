@@ -27,6 +27,16 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import axios from "axios";
 import { SessionType } from "@/models/sessions";
+import { toast } from "sonner";
+
+//<SelectItem value="21:00">09:00 PM</SelectItem>
+//<SelectItem value="16:00">04:00 PM</SelectItem>
+//<SelectItem value="12:00">12:00 PM</SelectItem>
+let availableTimes = [
+  { value: "21:00", label: "09:00 PM" },
+  { value: "16:00", label: "04:00 PM" },
+  { value: "12:00", label: "12:00 PM" },
+];
 
 export default function TeacherCard({
   teacher,
@@ -37,6 +47,34 @@ export default function TeacherCard({
 }) {
   const [date, setDate] = useState<Date>();
   const [time, setTime] = useState<string>();
+  const [availTimes, setAvailTimes] = useState(availableTimes);
+
+  const handleSetDate = async (date: Date) => {
+    try {
+      const dateString = date?.toLocaleDateString("en-CA").split("T")[0];
+      //console.log(dateString);
+      const dateTimeString = `${dateString}T00:00:00.000Z`;
+      const resp = await axios.get(
+        `/api/sessions/date/available?date=${dateTimeString}`,
+      );
+      const times = resp.data.times;
+
+      // Remove the times that are already booked
+      const newTimes = availableTimes.filter(
+        (time) => !times.includes(time.value),
+      );
+      //console.log(newTimes);
+      if (newTimes.length === 0) {
+        toast.error("No available times for this date");
+        return;
+      }
+      setDate(date);
+      setAvailTimes(newTimes);
+    } catch (error: any) {
+      console.error(error.message);
+    }
+  };
+
   // Let's try making a session
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,7 +170,14 @@ export default function TeacherCard({
                       {/* Date select  */}
                       <div className="space-y-2">
                         <Label>Choose a Date</Label>
-                        <DatePickerDemo date={date} setDateAction={setDate} />
+                        <DatePickerDemo
+                          date={date}
+                          setDateAction={(value) => {
+                            if (value instanceof Date) {
+                              handleSetDate(value);
+                            }
+                          }}
+                        />
                       </div>
                       {/* Time select  */}
                       <Select onValueChange={setTime}>
@@ -140,9 +185,11 @@ export default function TeacherCard({
                           <SelectValue placeholder="Time" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="21:00">09:00 PM</SelectItem>
-                          <SelectItem value="16:00">04:00 PM</SelectItem>
-                          <SelectItem value="12:00">12:00 PM</SelectItem>
+                          {availTimes.map((time) => (
+                            <SelectItem key={time.value} value={time.value}>
+                              {time.label}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       {/* Subject select  */}
