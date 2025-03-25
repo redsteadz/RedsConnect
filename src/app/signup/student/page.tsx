@@ -1,23 +1,36 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { toast } from "sonner"
-import { StudentType } from "@/models/student"
-import axios from "axios"
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
+import { StudentType } from "@/models/student";
+import axios from "axios";
 
 export default function StudentSignupPage() {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -26,7 +39,7 @@ export default function StudentSignupPage() {
     educationLevel: "school" as "school" | "undergraduate" | "postgraduate",
     institution: "",
     subjects: [] as string[],
-  })
+  });
 
   const subjects = [
     "Mathematics",
@@ -41,48 +54,52 @@ export default function StudentSignupPage() {
     "Economics",
     "Accounting",
     "Business Studies",
-  ]
+  ];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSelectChange = (name: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubjectToggle = (subject: string) => {
     setFormData((prev) => {
-      const subjects = [...prev.subjects]
+      const subjects = [...prev.subjects];
       if (subjects.includes(subject)) {
-        return { ...prev, subjects: subjects.filter((s) => s !== subject) }
+        return { ...prev, subjects: subjects.filter((s) => s !== subject) };
       } else {
-        return { ...prev, subjects: [...subjects, subject] }
+        return { ...prev, subjects: [...subjects, subject] };
       }
-    })
-  }
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     // Basic validation
     if (formData.password !== formData.confirmPassword) {
-      toast.error("Passwords do not match. Please make sure your passwords match.")
-      return
+      toast.error(
+        "Passwords do not match. Please make sure your passwords match.",
+      );
+      return;
     }
 
     if (formData.subjects.length === 0) {
-      toast.error("Subject selection required. Please select at least one subject you're interested in.")
-      return
+      toast.error(
+        "Subject selection required. Please select at least one subject you're interested in.",
+      );
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
       // Here you would normally make an API call to register the student
       // For now, we'll simulate a successful registration
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
       const studentData: StudentType = {
         name: formData.name,
@@ -91,26 +108,30 @@ export default function StudentSignupPage() {
         educationLevel: formData.educationLevel,
         institution: formData.institution,
         subjects: formData.subjects,
-      }
+      };
 
-      const resp = await axios.post('/api/students/signup', studentData, {
-        validateStatus: (status) => status < 500
+      const resp = await axios.post("/api/students/signup", studentData, {
+        validateStatus: (status) => status < 500,
       });
 
       if (resp.status !== 200) {
-        toast.error("Registration failed:" + resp.data.message)
-        throw new Error(resp.data.message)
+        toast.error("Registration failed:" + resp.data.message);
+        throw new Error(resp.data.message);
       }
 
-      toast.success("Registration successful! Your account has been created. You can now login.")
+      toast.success(
+        "Registration successful! Your account has been created. You can now login.",
+      );
       // Redirect to login page after successful registration
-      router.push("/login")
+      router.push("/login");
     } catch (error) {
-      toast.error("Registration failed. There was an error creating your account. Please try again.")
+      toast.error(
+        "Registration failed. There was an error creating your account. Please try again.",
+      );
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="container py-10">
@@ -118,7 +139,8 @@ export default function StudentSignupPage() {
         <CardHeader>
           <CardTitle>Student Registration</CardTitle>
           <CardDescription>
-            Create your student account to find tutors and book sessions on EduConnect Pakistan
+            Create your student account to find tutors and book sessions on
+            EduConnect Pakistan
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
@@ -180,7 +202,6 @@ export default function StudentSignupPage() {
                   />
                 </div>
               </div>
-
             </div>
 
             <div className="space-y-4">
@@ -191,7 +212,9 @@ export default function StudentSignupPage() {
                   <Label htmlFor="educationLevel">Education Level</Label>
                   <Select
                     value={formData.educationLevel}
-                    onValueChange={(value) => handleSelectChange("educationLevel", value)}
+                    onValueChange={(value) =>
+                      handleSelectChange("educationLevel", value)
+                    }
                     required
                   >
                     <SelectTrigger>
@@ -199,7 +222,9 @@ export default function StudentSignupPage() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="school">School</SelectItem>
-                      <SelectItem value="undergraduate">Undergraduate</SelectItem>
+                      <SelectItem value="undergraduate">
+                        Undergraduate
+                      </SelectItem>
                       <SelectItem value="postgraduate">Postgraduate</SelectItem>
                     </SelectContent>
                   </Select>
@@ -243,7 +268,10 @@ export default function StudentSignupPage() {
             </Button>
             <div className="text-center text-sm">
               Already have an account?{" "}
-              <Link href="/login" className="underline underline-offset-4 hover:text-primary">
+              <Link
+                href="/login"
+                className="underline underline-offset-4 hover:text-primary"
+              >
                 Login
               </Link>
             </div>
@@ -251,6 +279,5 @@ export default function StudentSignupPage() {
         </form>
       </Card>
     </div>
-  )
+  );
 }
-

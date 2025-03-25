@@ -1,21 +1,21 @@
 import { connect } from "@/db/db";
 import stdModel from "@/models/student";
-import { NextRequest, NextResponse } from 'next/server'
-import bcrypt from 'bcrypt'
+import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcrypt";
 import { StudentType } from "@/models/student";
 
-await connect()
+await connect();
 
 export async function POST(req: NextRequest) {
-  const data: StudentType = await req.json()
-  const teacher = new stdModel(data)
-  // Encrypt the password 
-  const salt = await bcrypt.genSalt(10)
-  teacher.password = await bcrypt.hash(teacher.password, salt)
+  const data: StudentType = await req.json();
+  const std = new stdModel(data);
+  // Encrypt the password
+  const salt = await bcrypt.genSalt(10);
+  std.password = await bcrypt.hash(std.password, salt);
   try {
-    await teacher.save()
-    return NextResponse.json({ message: "Student created successfully" })
+    await std.save();
+    return NextResponse.json({ message: "Student created successfully" });
   } catch (error: any) {
-    return NextResponse.json({ message: error.message }, { status: 400 })
+    return NextResponse.json({ message: error.message }, { status: 400 });
   }
 }
