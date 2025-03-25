@@ -16,19 +16,6 @@ import {
 } from "lucide-react";
 import { StudentType } from "@/models/student";
 import { TeacherType } from "@/models/teacher";
-import { ComboboxDemo } from "@/components/combobox";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-import { DatePickerDemo } from "@/components/datepicker";
-
 import {
   getSessionsWithTeachers,
   teachers as allTeachers,
@@ -36,15 +23,8 @@ import {
   type Teacher,
 } from "@/lib/mock-data";
 import axios from "axios";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
 import TeacherCard from "@/components/teacher/card";
+
 
 export default function StudentDashboard() {
   const [activeTab, setActiveTab] = useState("sessions");

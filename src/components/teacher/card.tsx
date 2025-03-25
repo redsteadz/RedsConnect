@@ -32,6 +32,14 @@ import { toast } from "sonner";
 //<SelectItem value="21:00">09:00 PM</SelectItem>
 //<SelectItem value="16:00">04:00 PM</SelectItem>
 //<SelectItem value="12:00">12:00 PM</SelectItem>
+
+const subjects = [
+  { label: "Math", value: "Math" },
+  { label: "Chemistry", value: "Chemistry" },
+  { label: "English", value: "English" },
+  { label: "Urdu", value: "Urdu" },
+];
+
 let availableTimes = [
   { value: "21:00", label: "09:00 PM" },
   { value: "16:00", label: "04:00 PM" },
@@ -48,6 +56,7 @@ export default function TeacherCard({
   const [date, setDate] = useState<Date>();
   const [time, setTime] = useState<string>();
   const [availTimes, setAvailTimes] = useState(availableTimes);
+  const [subject, setSubject] = useState<string>();
 
   const handleSetDate = async (date: Date) => {
     try {
@@ -78,12 +87,18 @@ export default function TeacherCard({
   // Let's try making a session
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Check all fields are filled
+    if (!date || !time || !subject) {
+      toast.error("Please fill all fields");
+      return;
+    }
     try {
-      console.log(date);
+      //console.log(date);
       const dateString = date?.toLocaleDateString("en-CA").split("T")[0];
       //console.log(dateString);
       const dateTimeString = `${dateString}T${time}:00.000Z`;
-      console.log(dateTimeString);
+      //console.log(dateTimeString);
       //const dateTime = new Date(dateTimeString);
       //console.log(dateTime);
       const session: SessionType = {
@@ -100,6 +115,7 @@ export default function TeacherCard({
       };
       const resp = await axios.post("/api/sessions/book", session);
       if (resp.status === 200) {
+        toast.success("Session booked");
         console.log("Session booked");
       }
     } catch (error: any) {
@@ -154,49 +170,70 @@ export default function TeacherCard({
               Profile
             </Button>
             <Drawer>
-              <DrawerTrigger>Book Session</DrawerTrigger>
+              <DrawerTrigger>
+                {" "}
+                <Button>Book Session</Button>
+              </DrawerTrigger>
               <DrawerContent>
                 <div className="mx-auto w-full max-w-sm">
                   <DrawerHeader>
-                    <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-                    <DrawerDescription>
-                      This action cannot be undone.
-                    </DrawerDescription>
+                    <DrawerTitle>
+                      Book a Session with {teacher.name}
+                    </DrawerTitle>
+                    <DrawerDescription>Choose your options</DrawerDescription>
                   </DrawerHeader>
                 </div>
                 <div className="mx-auto max-w-sm">
                   <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-                    <div>
+                    <div className="space-y-4">
                       {/* Date select  */}
-                      <div className="space-y-2">
-                        <Label>Choose a Date</Label>
-                        <DatePickerDemo
-                          date={date}
-                          setDateAction={(value) => {
-                            if (value instanceof Date) {
-                              handleSetDate(value);
-                            }
-                          }}
-                        />
-                      </div>
                       {/* Time select  */}
-                      <Select onValueChange={setTime}>
-                        <SelectTrigger className="w-[180px]">
-                          <SelectValue placeholder="Time" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {availTimes.map((time) => (
-                            <SelectItem key={time.value} value={time.value}>
-                              {time.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <div className="flex flex-col sm:flex-row space-y-4">
+                        <div className="space-y-2">
+                          <Label> Date</Label>
+                          <DatePickerDemo
+                            date={date}
+                            setDateAction={(value) => {
+                              if (value instanceof Date) {
+                                handleSetDate(value);
+                              }
+                            }}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label> Time</Label>
+                          <Select onValueChange={setTime}>
+                            <SelectTrigger className="w-[180px]">
+                              <SelectValue placeholder="Time" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {availTimes.map((time) => (
+                                <SelectItem key={time.value} value={time.value}>
+                                  {time.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
                       {/* Subject select  */}
-                      <ComboboxDemo />
+                      <div className="space-y-2">
+                        <Label> Subject</Label>
+                        <div className="flex justify-center">
+                          <ComboboxDemo
+                            frameworks={subjects}
+                            value={subject}
+                            setValueAction={setSubject}
+                          />
+                        </div>
+                      </div>
                     </div>
                     <DrawerFooter>
-                      <Button>Submit</Button>
+                      <DrawerClose>
+                        {" "}
+                        <Button>Submit</Button>
+                      </DrawerClose>
                       <DrawerClose>Cancel</DrawerClose>
                     </DrawerFooter>
                   </form>
