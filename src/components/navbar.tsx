@@ -31,7 +31,7 @@ export default function Navbar() {
 
   return (
     <header className="w-full border-b bg-background">
-      <div className="container flex h-16 items-center px-4 md:px-6">
+      <div className="container mx-auto flex h-16 items-center px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2">
           <BookOpen className="h-6 w-6" />
           <span className="text-lg hidden sm:block font-semibold">

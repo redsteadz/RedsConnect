@@ -12,7 +12,7 @@ export interface SessionType {
   dateTime: string;
   duration: number;
   // The status of the session
-  status: "pending" | "accepted" | "rejected" | "completed";
+  status: "pending" | "accepted" | "rejected" | "completed" | "cancelled";
   subject: string;
 }
 
@@ -23,7 +23,7 @@ const sessionSchema = new Schema({
   duration: Number,
   status: {
     type: String,
-    enum: ["pending", "accepted", "rejected", "completed"],
+    enum: ["pending", "accepted", "rejected", "completed", "cancelled"],
   },
   subject: String,
 });

@@ -21,6 +21,7 @@ export async function GET(req: NextRequest) {
     //console.log(date);
     const sessions: SessionType[] = await sessionModel.find({
       dateTime: { $gte: dateStart, $lt: dateEnd },
+      //state: "pending",
     });
     //console.log(sessions);
     let times: string[] = [];
@@ -34,7 +35,7 @@ export async function GET(req: NextRequest) {
       const time: string = `${hours}:${minutes}`;
       times.push(time);
     });
-
+    console.log(times);
     return NextResponse.json(
       { message: "Session Found", times },
       { status: 200 },

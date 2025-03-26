@@ -134,7 +134,7 @@ export default function StudentSignupPage() {
   };
 
   return (
-    <div className="container py-10">
+    <div className="mx-auto container py-10">
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
           <CardTitle>Student Registration</CardTitle>

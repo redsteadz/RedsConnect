@@ -227,10 +227,7 @@ export default function TeacherCard({
                       </div>
                     </div>
                     <DrawerFooter>
-                      <DrawerClose>
-                        {" "}
-                        <Button>Submit</Button>
-                      </DrawerClose>
+                      <DrawerClose onClick={handleSubmit}> Submit</DrawerClose>
                       <DrawerClose>Cancel</DrawerClose>
                     </DrawerFooter>
                   </form>

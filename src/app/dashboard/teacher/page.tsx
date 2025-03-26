@@ -16,23 +16,68 @@ import { SessionType } from "@/models/sessions";
 
 export default function TeacherDashboard() {
   // Get all the sessions
+  // Retrieve all sessions
+  const [sessions, setSessions] = useState<SessionType[]>([]);
   const [upcomingSessions, setUpcomingSessions] = useState<SessionType[]>([]);
   const [sessionRequest, setSessionRequests] = useState<SessionType[]>([]);
   useEffect(() => {
     const fetchSessions = async () => {
       const resp = await axios.get("/api/sessions/getAll");
       const sessions: SessionType[] = resp.data.sessions;
+      setSessions(sessions);
       // Filter out the pending sessions
       const sessionsRequests = sessions.filter(
         (session) => session.status === "pending",
       );
+      const upcomingSessions = sessions.filter((session) => {
+        return session.status === "accepted";
+      });
       setSessionRequests(sessionsRequests);
+      setUpcomingSessions(upcomingSessions);
     };
     fetchSessions();
   }, []);
 
+  const handleState = async (sessionID: string, state: string) => {
+    const resp = await axios.post(`/api/sessions/${state}`, { sessionID });
+    if (resp.status === 200) {
+      const updatedSession: SessionType[] = sessions.map((session) => {
+        if (session._id === sessionID) {
+          return {
+            ...session,
+            status: state as "accepted" | "rejected" | "cancelled",
+          };
+        }
+        return session;
+      });
+
+      setSessions(updatedSession);
+    } else {
+      console.log("Failed to accept the session");
+    }
+  };
+
+  // Format date
+  const formatDate = (date: Date) => {
+    return new Intl.DateTimeFormat("en-US", {
+      weekday: "short",
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    }).format(date);
+  };
+
+  // Format time
+  const formatTime = (date: Date) => {
+    return new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    }).format(date);
+  };
+
   return (
-    <div className=" container py-10">
+    <div className="mx-auto container py-10">
       <h1 className="text-3xl font-bold mb-6">Teacher Dashboard</h1>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
@@ -119,56 +164,47 @@ export default function TeacherDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {/* This would be a list of sessions in a real app */}
-                <div className="border rounded-lg p-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-medium">Mathematics - Calculus</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Student: Ahmed Khan
-                      </p>
-                      <div className="flex items-center mt-2 text-sm">
-                        <Calendar className="h-4 w-4 mr-1" />
-                        <span>March 25, 2025</span>
-                        <Clock className="h-4 w-4 ml-3 mr-1" />
-                        <span>4:00 PM - 5:30 PM</span>
+                {sessions.map((session) => {
+                  if (session.status !== "accepted") return null;
+                  return (
+                    <div key={session._id} className="border rounded-lg p-4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="font-medium">
+                            Mathematics - Calculus
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            Student:{" "}
+                            {typeof session.studentId === "object" &&
+                              session.studentId.name}
+                          </p>
+                          <div className="flex items-center mt-2 text-sm">
+                            <Calendar className="h-4 w-4 mr-1" />
+                            <span>
+                              {formatDate(new Date(session.dateTime))}
+                            </span>
+                            <Clock className="h-4 w-4 ml-3 mr-1" />
+                            <span>
+                              {formatTime(new Date(session.dateTime))}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Button variant="outline" size="sm">
+                            Reschedule
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => handleState(session._id!, "cancel")}
+                          >
+                            Cancel
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">
-                        Reschedule
-                      </Button>
-                      <Button variant="destructive" size="sm">
-                        Cancel
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="border rounded-lg p-4">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-medium">Physics - Mechanics</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Student: Sara Ahmed
-                      </p>
-                      <div className="flex items-center mt-2 text-sm">
-                        <Calendar className="h-4 w-4 mr-1" />
-                        <span>March 26, 2025</span>
-                        <Clock className="h-4 w-4 ml-3 mr-1" />
-                        <span>2:00 PM - 3:30 PM</span>
-                      </div>
-                    </div>
-                    <div className="flex space-x-2">
-                      <Button variant="outline" size="sm">
-                        Reschedule
-                      </Button>
-                      <Button variant="destructive" size="sm">
-                        Cancel
-                      </Button>
-                    </div>
-                  </div>
-                </div>
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
@@ -184,34 +220,46 @@ export default function TeacherDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {sessionRequest.map((session) => (
-                  <div key={session._id} className="border rounded-lg p-4">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="font-medium">{session.subject}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          Student:{" "}
-                          {typeof session.studentId === "object" &&
-                            session.studentId.name}
-                        </p>
-                        <div className="flex items-center mt-2 text-sm">
-                          <Calendar className="h-4 w-4 mr-1" />
-                          <span>March 28, 2025</span>
-                          <Clock className="h-4 w-4 ml-3 mr-1" />
-                          <span>5:00 PM - 6:30 PM</span>
+                {sessionRequest.map((session) => {
+                  if (session.status !== "pending") return null;
+                  return (
+                    <div key={session._id} className="border rounded-lg p-4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="font-medium">{session.subject}</h3>
+                          <p className="text-sm text-muted-foreground">
+                            Student:{" "}
+                            {typeof session.studentId === "object" &&
+                              session.studentId.name}
+                          </p>
+                          <div className="flex items-center mt-2 text-sm">
+                            <Calendar className="h-4 w-4 mr-1" />
+                            <span>March 28, 2025</span>
+                            <Clock className="h-4 w-4 ml-3 mr-1" />
+                            <span>5:00 PM - 6:30 PM</span>
+                          </div>
+                        </div>
+                        <div className="flex space-x-2">
+                          {/* The submit button accepts the given session */}
+                          <Button
+                            variant="default"
+                            size="sm"
+                            onClick={() => handleState(session._id!, "accept")}
+                          >
+                            Accept
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleState(session._id!, "reject")}
+                          >
+                            Rejected
+                          </Button>
                         </div>
                       </div>
-                      <div className="flex space-x-2">
-                        <Button variant="default" size="sm">
-                          Accept
-                        </Button>
-                        <Button variant="outline" size="sm">
-                          Decline
-                        </Button>
-                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </CardContent>
           </Card>

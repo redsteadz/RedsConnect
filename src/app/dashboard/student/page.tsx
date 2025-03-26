@@ -122,7 +122,7 @@ export default function StudentDashboard() {
   };
 
   return (
-    <div className="px-4 container py-8">
+    <div className="mx-auto px-4 container py-8">
       {/* Student Profile */}
       <div className="mb-8">
         <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8">

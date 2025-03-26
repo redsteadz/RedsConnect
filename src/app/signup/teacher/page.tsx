@@ -1,26 +1,39 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Slider } from "@/components/ui/slider"
-import { Checkbox } from "@/components/ui/checkbox"
-import { toast } from "sonner"
-import { TeacherType } from "@/models/teacher"
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
+import { TeacherType } from "@/models/teacher";
 
-import axios from "axios"
+import axios from "axios";
 
 export default function TeacherSignupPage() {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -32,7 +45,7 @@ export default function TeacherSignupPage() {
     bio: "",
     subjects: [] as string[],
     availability: ["online" as "online" | "in-person" | "both"],
-  })
+  });
 
   const subjects = [
     "Mathematics",
@@ -47,100 +60,115 @@ export default function TeacherSignupPage() {
     "Economics",
     "Accounting",
     "Business Studies",
-  ]
+  ];
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSelectChange = (name: string, value: string) => {
     // Dealing with availability
     if (name === "availability") {
       if (value === "both") {
-        return setFormData((prev) => ({ ...prev, availability: ["online", "in-person"] }))
+        return setFormData((prev) => ({
+          ...prev,
+          availability: ["online", "in-person"],
+        }));
       } else if (value === "online") {
-        return setFormData((prev) => ({ ...prev, availability: ["online"] }))
+        return setFormData((prev) => ({ ...prev, availability: ["online"] }));
       } else {
-        return setFormData((prev) => ({ ...prev, availability: ["in-person"] }))
+        return setFormData((prev) => ({
+          ...prev,
+          availability: ["in-person"],
+        }));
       }
     }
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubjectToggle = (subject: string) => {
     setFormData((prev) => {
-      const subjects = [...prev.subjects]
+      const subjects = [...prev.subjects];
       if (subjects.includes(subject)) {
-        return { ...prev, subjects: subjects.filter((s) => s !== subject) }
+        return { ...prev, subjects: subjects.filter((s) => s !== subject) };
       } else {
-        return { ...prev, subjects: [...subjects, subject] }
+        return { ...prev, subjects: [...subjects, subject] };
       }
-    })
-  }
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     // Basic validation
     if (formData.password !== formData.confirmPassword) {
-      toast.error("Passwords do not match. Please make sure your passwords match.")
-      return
+      toast.error(
+        "Passwords do not match. Please make sure your passwords match.",
+      );
+      return;
     }
 
     if (formData.subjects.length === 0) {
-      toast.error("Subject selection required. Please select at least one subject you can teach.")
-      return
+      toast.error(
+        "Subject selection required. Please select at least one subject you can teach.",
+      );
+      return;
     }
 
     if (formData.hourlyRate < 500 || formData.hourlyRate > 5000) {
-      toast.error("Hourly rate must be between 500 and 5000 PKR.")
-      return
+      toast.error("Hourly rate must be between 500 and 5000 PKR.");
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
       // Here you would normally make an API call to register the teacher
       // For now, we'll simulate a successful registration
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      await new Promise((resolve) => setTimeout(resolve, 1500));
       const teacherObject: TeacherType = {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        qualifications: formData.qualification.split(' ').map((q) => q.trim()),
+        qualifications: formData.qualification.split(" ").map((q) => q.trim()),
         yoe: Number(formData.experience),
         hourlyRate: formData.hourlyRate,
         bio: formData.bio,
         subjects: formData.subjects,
         availability: formData.availability,
-      }
+      };
       const resp = await axios.post("/api/teachers/signup", teacherObject, {
         validateStatus: (status) => status < 500,
-      })
+      });
       //console.log(resp)
       if (resp.status !== 200) {
-        toast.error("Registration failed:" + resp.data.message)
-        throw new Error(resp.data.message)
+        toast.error("Registration failed:" + resp.data.message);
+        throw new Error(resp.data.message);
       }
-      toast.success("Registration successful! Your account has been created. You can now login.")
+      toast.success(
+        "Registration successful! Your account has been created. You can now login.",
+      );
       // Redirect to login page after successful registration
-      router.push("/login")
+      router.push("/login");
     } catch (error: any) {
       //console.log(error)
-      toast.error("Registration failed." + error.message)
+      toast.error("Registration failed." + error.message);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="container py-10">
+    <div className="mx-auto container py-10">
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
           <CardTitle>Teacher Registration</CardTitle>
           <CardDescription>
-            Create your teacher account to start offering tutoring services on EduConnect Pakistan
+            Create your teacher account to start offering tutoring services on
+            EduConnect Pakistan
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
@@ -250,7 +278,9 @@ export default function TeacherSignupPage() {
                   max={5000}
                   defaultValue={[formData.hourlyRate]}
                   value={[formData.hourlyRate]}
-                  onValueChange={(e) => setFormData((prev) => ({ ...prev, hourlyRate: e[0] }))}
+                  onValueChange={(e) =>
+                    setFormData((prev) => ({ ...prev, hourlyRate: e[0] }))
+                  }
                 />
               </div>
               <div className="space-y-2">
@@ -292,7 +322,9 @@ export default function TeacherSignupPage() {
                       ? formData.availability[0]
                       : "both"
                   }
-                  onValueChange={(value) => handleSelectChange("availability", value)}
+                  onValueChange={(value) =>
+                    handleSelectChange("availability", value)
+                  }
                   required
                 >
                   <SelectTrigger>
@@ -301,7 +333,9 @@ export default function TeacherSignupPage() {
                   <SelectContent>
                     <SelectItem value="online">Online Only</SelectItem>
                     <SelectItem value="in-person">In-Person Only</SelectItem>
-                    <SelectItem value="both">Both Online and In-Person</SelectItem>
+                    <SelectItem value="both">
+                      Both Online and In-Person
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -313,7 +347,10 @@ export default function TeacherSignupPage() {
             </Button>
             <div className="text-center text-sm">
               Already have an account?{" "}
-              <Link href="/login" className="underline underline-offset-4 hover:text-primary">
+              <Link
+                href="/login"
+                className="underline underline-offset-4 hover:text-primary"
+              >
                 Login
               </Link>
             </div>
@@ -321,6 +358,5 @@ export default function TeacherSignupPage() {
         </form>
       </Card>
     </div>
-  )
+  );
 }
-

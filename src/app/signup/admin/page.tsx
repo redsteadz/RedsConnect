@@ -1,20 +1,27 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { toast } from "sonner"
+import { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 export default function AdminSignupPage() {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,53 +31,64 @@ export default function AdminSignupPage() {
     position: "",
     adminCode: "",
     reason: "",
-  })
+  });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     // Basic validation
     if (formData.password !== formData.confirmPassword) {
-      toast.error("Passwords do not match. Please make sure your passwords match.")
-      return
+      toast.error(
+        "Passwords do not match. Please make sure your passwords match.",
+      );
+      return;
     }
 
     // Validate admin code (in a real app, this would be checked on the server)
     if (formData.adminCode !== "ADMIN123") {
-      toast.error("Invalid admin code. The admin code you entered is not valid.")
-      return
+      toast.error(
+        "Invalid admin code. The admin code you entered is not valid.",
+      );
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
 
     try {
       // Here you would normally make an API call to register the admin
       // For now, we'll simulate a successful registration
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
-      toast.success("Registration successful! Your admin account has been created. You can now login.")
+      toast.success(
+        "Registration successful! Your admin account has been created. You can now login.",
+      );
 
       // Redirect to login page after successful registration
-      router.push("/login")
+      router.push("/login");
     } catch (error) {
-      toast.error("Registration failed. There was an error creating your account. Please try again.")
+      toast.error(
+        "Registration failed. There was an error creating your account. Please try again.",
+      );
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="container py-10">
+    <div className="mx-auto container py-10">
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
           <CardTitle>Administrator Registration</CardTitle>
           <CardDescription>
-            Create your administrator account to manage the EduConnect Pakistan platform
+            Create your administrator account to manage the EduConnect Pakistan
+            platform
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
@@ -147,7 +165,9 @@ export default function AdminSignupPage() {
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-lg font-medium">Administrative Information</h3>
+              <h3 className="text-lg font-medium">
+                Administrative Information
+              </h3>
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
@@ -196,7 +216,10 @@ export default function AdminSignupPage() {
             </Button>
             <div className="text-center text-sm">
               Already have an account?{" "}
-              <Link href="/login" className="underline underline-offset-4 hover:text-primary">
+              <Link
+                href="/login"
+                className="underline underline-offset-4 hover:text-primary"
+              >
                 Login
               </Link>
             </div>
@@ -204,6 +227,5 @@ export default function AdminSignupPage() {
         </form>
       </Card>
     </div>
-  )
+  );
 }
-
