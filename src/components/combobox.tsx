@@ -57,7 +57,7 @@ export function ComboboxDemo({
                   key={framework.value}
                   value={framework.value}
                   onSelect={(currentValue) => {
-                    setValueAction(currentValue === value ? "" : currentValue);
+                    setValueAction(currentValue);
                     setOpen(false);
                   }}
                 >

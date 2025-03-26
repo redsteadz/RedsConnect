@@ -111,11 +111,12 @@ export default function TeacherCard({
         // Will change
         status: "pending",
         // Will Change
-        subject: "Math",
+        subject: subject,
       };
       const resp = await axios.post("/api/sessions/book", session);
       if (resp.status === 200) {
         toast.success("Session booked");
+
         console.log("Session booked");
       }
     } catch (error: any) {
@@ -227,7 +228,10 @@ export default function TeacherCard({
                       </div>
                     </div>
                     <DrawerFooter>
-                      <DrawerClose onClick={handleSubmit}> Submit</DrawerClose>
+                      <DrawerClose onClickCapture={handleSubmit}>
+                        {" "}
+                        Submit
+                      </DrawerClose>
                       <DrawerClose>Cancel</DrawerClose>
                     </DrawerFooter>
                   </form>
