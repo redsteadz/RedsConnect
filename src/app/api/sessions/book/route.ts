@@ -20,7 +20,10 @@ export async function POST(req: NextRequest) {
       subject: sessionD.subject,
     });
     await session.save();
-    return NextResponse.json({ message: "Session booked" }, { status: 200 });
+    return NextResponse.json(
+      { message: "Session booked", session },
+      { status: 200 },
+    );
   } catch (error: any) {
     console.log(error.message);
     return NextResponse.json({ message: error.message }, { status: 400 });

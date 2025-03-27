@@ -16,15 +16,10 @@ import {
 } from "lucide-react";
 import { StudentType } from "@/models/student";
 import { TeacherType } from "@/models/teacher";
-import {
-  getSessionsWithTeachers,
-  teachers as allTeachers,
-  type Session,
-  type Teacher,
-} from "@/lib/mock-data";
 import axios from "axios";
 import TeacherCard from "@/components/teacher/card";
 import { SessionType } from "@/models/sessions";
+import { toast } from "sonner";
 
 export default function StudentDashboard() {
   const [activeTab, setActiveTab] = useState("sessions");
@@ -51,7 +46,7 @@ export default function StudentDashboard() {
       const tch: TeacherType[] = (await axios.get("/api/teachers/getAll")).data
         .profiles;
       setTeachers(tch);
-      setFilteredTeachers(allTeachers);
+      setFilteredTeachers(tch);
     };
     fetchData();
   }, []);
@@ -102,7 +97,38 @@ export default function StudentDashboard() {
       hour: "numeric",
       minute: "numeric",
       hour12: true,
+      timeZone: "UTC",
     }).format(date);
+  };
+
+  const handleCancelSession = async (sessionID: string) => {
+    const resp = await axios.post(`/api/sessions/cancel`, { sessionID });
+    if (resp.status !== 200) {
+      toast.error("Error: Could not cancel");
+    }
+    const updatedSession: SessionType[] = sessions.map((session) => {
+      if (session._id === sessionID) {
+        return {
+          ...session,
+          status: "cancelled",
+        };
+      }
+      return session;
+    });
+    setSessions(updatedSession);
+    toast.message("Successfully cancelled session");
+  };
+
+  const handleDeleteSession = async (sessionID: string) => {
+    const resp = await axios.post(`/api/sessions/delete`, { sessionID });
+    if (resp.status !== 200) {
+      toast.error("Error deleting session");
+    }
+    const updatedSessions: SessionType[] = sessions.filter(
+      (session) => session._id !== sessionID,
+    );
+    setSessions(updatedSessions);
+    toast.message("Successfully deleted session");
   };
 
   // Get status badge color
@@ -260,6 +286,9 @@ export default function StudentDashboard() {
                               size="sm"
                               variant="destructive"
                               className="h-8 text-xs px-2"
+                              onClick={() => {
+                                handleCancelSession(session._id!);
+                              }}
                             >
                               Cancel
                             </Button>
@@ -288,6 +317,9 @@ export default function StudentDashboard() {
                               size="sm"
                               variant="destructive"
                               className="h-8 text-xs px-2"
+                              onClick={() => {
+                                handleCancelSession(session._id!);
+                              }}
                             >
                               Cancel
                             </Button>
@@ -300,6 +332,18 @@ export default function StudentDashboard() {
                             className="h-8 text-xs px-2"
                           >
                             Leave Review
+                          </Button>
+                        )}
+                        {session.status === "cancelled" && (
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            className="h-8 text-xs px-2"
+                            onClick={() => {
+                              handleDeleteSession(session._id!);
+                            }}
+                          >
+                            DELETE
                           </Button>
                         )}
                       </div>
@@ -325,6 +369,7 @@ export default function StudentDashboard() {
                     key={teacher._id}
                     teacher={teacher}
                     stdID={curStd?._id}
+                    setSessionsAction={setSessions}
                   />
                 ))}
               </div>

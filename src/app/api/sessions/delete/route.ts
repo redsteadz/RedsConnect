@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import sessionModel from "@/models/sessions";
 import { SessionType } from "@/models/sessions";
 import { getDatafromJWT } from "@/util/getDatafromJWT";
+import { Document } from "mongoose";
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,10 +16,10 @@ export async function POST(req: NextRequest) {
     const data = await req.json();
     const sessionID = data.sessionID;
     // First check if the session is accepted
-    const session: SessionType | null = await sessionModel.findByIdAndUpdate(
-      sessionID,
-      { status: "cancelled" },
-      { new: true },
+    const session: (SessionType & Document) | null = await sessionModel.findOne(
+      {
+        _id: sessionID,
+      },
     );
     //console.log(session);
     if (type === "teacher" && session?.teacherId != id) {
@@ -32,7 +33,7 @@ export async function POST(req: NextRequest) {
         { status: 200 },
       );
     }
-
+    await session?.deleteOne();
     return NextResponse.json(
       { message: "Session accepted", session },
       { status: 200 },

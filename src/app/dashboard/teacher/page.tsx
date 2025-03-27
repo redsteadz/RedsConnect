@@ -40,12 +40,13 @@ export default function TeacherDashboard() {
 
   const handleState = async (sessionID: string, state: string) => {
     const resp = await axios.post(`/api/sessions/${state}`, { sessionID });
+    const newState = state + (state in ["accept", "reject"] ? "ed" : "led");
     if (resp.status === 200) {
       const updatedSession: SessionType[] = sessions.map((session) => {
         if (session._id === sessionID) {
           return {
             ...session,
-            status: state as "accepted" | "rejected" | "cancelled",
+            status: newState as "accepted" | "rejected" | "cancelled",
           };
         }
         return session;

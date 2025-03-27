@@ -2,6 +2,8 @@ import { connect } from "@/db/db";
 import stdModel from "@/models/student";
 import { StudentType } from "@/models/student";
 import teacherModel from "@/models/teacher";
+import adminModel from "@/models/admin";
+import { AdminType } from "@/models/admin";
 import { TeacherType } from "@/models/teacher";
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
@@ -17,6 +19,9 @@ export async function POST(req: NextRequest) {
       profile = await stdModel.findOne({ email });
     } else if (type === "teacher") {
       profile = await teacherModel.findOne({ email });
+    } else if (type === "admin") {
+      // Add the admin model and type here
+      profile = await adminModel.findOne({ email });
     }
     console.log(profile, type);
     if (profile) {

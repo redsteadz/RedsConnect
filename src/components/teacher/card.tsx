@@ -24,7 +24,7 @@ import {
   DrawerDescription,
 } from "@/components/ui/drawer";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import axios from "axios";
 import { SessionType } from "@/models/sessions";
 import { toast } from "sonner";
@@ -49,14 +49,17 @@ let availableTimes = [
 export default function TeacherCard({
   teacher,
   stdID,
+  setSessionsAction,
 }: {
   teacher: TeacherType;
   stdID: string | undefined;
+  setSessionsAction: React.Dispatch<React.SetStateAction<SessionType[]>>;
 }) {
   const [date, setDate] = useState<Date>();
   const [time, setTime] = useState<string>();
   const [availTimes, setAvailTimes] = useState(availableTimes);
   const [subject, setSubject] = useState<string>();
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   const handleSetDate = async (date: Date) => {
     try {
@@ -106,8 +109,7 @@ export default function TeacherCard({
         studentId: stdID!,
         dateTime: dateTimeString,
         // Will change
-        duration: 1,
-
+        duration: 90,
         // Will change
         status: "pending",
         // Will Change
@@ -116,8 +118,9 @@ export default function TeacherCard({
       const resp = await axios.post("/api/sessions/book", session);
       if (resp.status === 200) {
         toast.success("Session booked");
-
-        console.log("Session booked");
+        closeRef.current?.click();
+        //console.log("Session booked");
+        setSessionsAction((prev) => [...prev, resp.data.session]);
       }
     } catch (error: any) {
       console.error(error.message);
@@ -171,7 +174,9 @@ export default function TeacherCard({
               Profile
             </Button>
             <Drawer>
-              <DrawerTrigger> Book Session</DrawerTrigger>
+              <DrawerTrigger asChild>
+                <Button size="sm">Book Session</Button>
+              </DrawerTrigger>
               <DrawerContent>
                 <div className="mx-auto w-full max-w-sm">
                   <DrawerHeader>
@@ -228,10 +233,12 @@ export default function TeacherCard({
                       </div>
                     </div>
                     <DrawerFooter>
-                      <DrawerClose onClickCapture={handleSubmit}>
-                        {" "}
-                        Submit
+                      <DrawerClose asChild>
+                        <button ref={closeRef} className="hidden" />
                       </DrawerClose>
+                      <Button size="sm" onClick={handleSubmit}>
+                        Submit
+                      </Button>
                       <DrawerClose>Cancel</DrawerClose>
                     </DrawerFooter>
                   </form>

@@ -21,9 +21,10 @@ export async function GET(req: NextRequest) {
     //console.log(date);
     const sessions: SessionType[] = await sessionModel.find({
       dateTime: { $gte: dateStart, $lt: dateEnd },
-      //state: "pending",
+      // If pending or accepted, then the session is already booked
+      status: ["pending", "accepted"],
     });
-    //console.log(sessions);
+    console.log(sessions);
     let times: string[] = [];
     sessions.forEach((session) => {
       const date = new Date(session.dateTime);

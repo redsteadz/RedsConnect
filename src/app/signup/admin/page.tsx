@@ -18,6 +18,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { AdminType } from "@/models/admin";
+import axios from "axios";
 
 export default function AdminSignupPage() {
   const router = useRouter();
@@ -27,10 +29,8 @@ export default function AdminSignupPage() {
     email: "",
     password: "",
     confirmPassword: "",
-    phone: "",
     position: "",
     adminCode: "",
-    reason: "",
   });
 
   const handleChange = (
@@ -65,11 +65,23 @@ export default function AdminSignupPage() {
       // Here you would normally make an API call to register the admin
       // For now, we'll simulate a successful registration
       await new Promise((resolve) => setTimeout(resolve, 1500));
-
+      const adminData: AdminType = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        position: formData.position,
+        code: formData.adminCode,
+      };
+      const resp = await axios.post("/api/admin/signup", adminData, {
+        validateStatus: (status) => status < 500,
+      });
+      if (resp.status !== 200) {
+        toast.error("Registration failed. Please try again.");
+        throw new Error(resp.data.message);
+      }
       toast.success(
         "Registration successful! Your admin account has been created. You can now login.",
       );
-
       // Redirect to login page after successful registration
       router.push("/login");
     } catch (error) {
@@ -150,18 +162,6 @@ export default function AdminSignupPage() {
                   />
                 </div>
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
-                <Input
-                  id="phone"
-                  name="phone"
-                  placeholder="Enter your phone number"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
             </div>
 
             <div className="space-y-4">
@@ -195,22 +195,9 @@ export default function AdminSignupPage() {
                   />
                 </div>
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="reason">Reason for Access</Label>
-                <Textarea
-                  id="reason"
-                  name="reason"
-                  placeholder="Explain why you need administrator access to the platform"
-                  value={formData.reason}
-                  onChange={handleChange}
-                  required
-                  className="min-h-[100px]"
-                />
-              </div>
             </div>
           </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
+          <CardFooter className="flex flex-col space-y-4 my-6">
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? "Creating Account..." : "Create Account"}
             </Button>
