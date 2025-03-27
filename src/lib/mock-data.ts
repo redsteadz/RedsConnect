@@ -1,234 +1,123 @@
-
-// Mock data for the student dashboard
-
-// Types based on the schemas
-export interface Student {
-  _id: string
+export interface TeacherApplication {
+  id: string
   name: string
   email: string
-  subjects: string[]
-  educationLevel: "school" | "undergraduate" | "postgraduate"
-  institution: string
-}
-
-export interface Teacher {
-  _id: string
-  name: string
-  email: string
-  qualifications: string[]
-  bio: string
-  yoe: number // years of experience
-  subjects: string[]
-  hourlyRate: number
-  availability: ("online" | "in-person")[]
-  averageRating?: number
-}
-
-export interface Session {
-  _id: string
-  teacherId: string
-  studentId: string
-  teacher?: Teacher // Populated field
-  dateTime: Date
-  duration: number // in minutes
-  status: "pending" | "accepted" | "rejected" | "completed"
+  phone: string
+  location: string
   subject: string
+  specializations: string[]
+  education: string
+  experience: number
+  statement: string
+  avatar: string
+  appliedAt: string
 }
 
-export interface Review {
-  _id: string
-  teacherId: string
-  studentId: string
-  rating: number
-  review: string
-}
-
-// Mock current student
-export const currentStudent: Student = {
-  _id: "s1",
-  name: "Ahmed Khan",
-  email: "ahmed.khan@example.com",
-  subjects: ["Mathematics", "Physics", "Computer Science"],
-  educationLevel: "undergraduate",
-  institution: "National University of Computer & Emerging Sciences",
-}
-
-// Mock teachers
-export const teachers: Teacher[] = [
+export const mockTeacherApplications: TeacherApplication[] = [
   {
-    _id: "t1",
-    name: "Dr. Fatima Ali",
-    email: "fatima.ali@example.com",
-    qualifications: ["PhD in Mathematics", "MSc in Applied Mathematics"],
-    bio: "Experienced mathematics professor with 10 years of teaching experience at university level.",
-    yoe: 10,
-    subjects: ["Mathematics", "Calculus", "Linear Algebra"],
-    hourlyRate: 2500,
-    availability: ["online", "in-person"],
-    averageRating: 4.8,
+    id: "t1",
+    name: "Dr. Sarah Johnson",
+    email: "sarah.johnson@example.com",
+    phone: "(555) 123-4567",
+    location: "Boston, MA",
+    subject: "Mathematics",
+    specializations: ["Calculus", "Statistics", "Algebra"],
+    education: "Ph.D. in Mathematics, MIT",
+    experience: 8,
+    statement:
+      "I believe in making complex mathematical concepts accessible to all students through real-world applications and visual learning techniques.",
+    avatar: "/placeholder.svg?height=200&width=200",
+    appliedAt: "2023-11-15T14:30:00Z",
   },
   {
-    _id: "t2",
-    name: "Prof. Imran Ahmed",
-    email: "imran.ahmed@example.com",
-    qualifications: ["MSc in Physics", "BSc in Engineering"],
-    bio: "Physics expert specializing in mechanics and electromagnetism with practical industry experience.",
-    yoe: 8,
-    subjects: ["Physics", "Mechanics", "Electromagnetism"],
-    hourlyRate: 2000,
-    availability: ["online"],
-    averageRating: 4.5,
+    id: "t2",
+    name: "Michael Chen",
+    email: "michael.chen@example.com",
+    phone: "(555) 234-5678",
+    location: "San Francisco, CA",
+    subject: "Computer Science",
+    specializations: ["Programming", "Web Development", "AI"],
+    education: "M.S. in Computer Science, Stanford University",
+    experience: 5,
+    statement:
+      "My teaching philosophy centers around project-based learning, allowing students to build real applications while mastering programming concepts.",
+    avatar: "/placeholder.svg?height=200&width=200",
+    appliedAt: "2023-11-16T09:15:00Z",
   },
   {
-    _id: "t3",
-    name: "Sara Malik",
-    email: "sara.malik@example.com",
-    qualifications: ["MSc in Computer Science", "Oracle Certified Professional"],
-    bio: "Software engineer and educator with expertise in programming languages and database systems.",
-    yoe: 6,
-    subjects: ["Computer Science", "Programming", "Database Systems"],
-    hourlyRate: 1800,
-    availability: ["online", "in-person"],
-    averageRating: 4.9,
+    id: "t3",
+    name: "Dr. Amara Okafor",
+    email: "amara.okafor@example.com",
+    phone: "(555) 345-6789",
+    location: "Chicago, IL",
+    subject: "Biology",
+    specializations: ["Molecular Biology", "Genetics", "Ecology"],
+    education: "Ph.D. in Biological Sciences, University of Chicago",
+    experience: 10,
+    statement:
+      "I strive to inspire scientific curiosity by connecting classroom learning to current research and environmental challenges facing our world today.",
+    avatar: "/placeholder.svg?height=200&width=200",
+    appliedAt: "2023-11-14T11:45:00Z",
   },
   {
-    _id: "t4",
-    name: "Ali Hassan",
-    email: "ali.hassan@example.com",
-    qualifications: ["MA in English Literature", "TEFL Certification"],
-    bio: "English language specialist with experience teaching academic writing and communication skills.",
-    yoe: 7,
-    subjects: ["English", "Academic Writing", "Communication Skills"],
-    hourlyRate: 1500,
-    availability: ["online"],
-    averageRating: 4.6,
+    id: "t4",
+    name: "James Rodriguez",
+    email: "james.rodriguez@example.com",
+    phone: "(555) 456-7890",
+    location: "Miami, FL",
+    subject: "History",
+    specializations: ["World History", "American History", "Political Science"],
+    education: "M.A. in History, University of Florida",
+    experience: 7,
+    statement:
+      "History is more than dates and facts—it's about understanding human experiences and learning from our past to create a better future.",
+    avatar: "/placeholder.svg?height=200&width=200",
+    appliedAt: "2023-11-17T13:20:00Z",
   },
   {
-    _id: "t5",
-    name: "Zainab Qureshi",
-    email: "zainab.qureshi@example.com",
-    qualifications: ["MSc in Chemistry", "BSc in Biochemistry"],
-    bio: "Chemistry educator specializing in organic chemistry and biochemistry with lab experience.",
-    yoe: 5,
-    subjects: ["Chemistry", "Organic Chemistry", "Biochemistry"],
-    hourlyRate: 1900,
-    availability: ["in-person"],
-    averageRating: 4.7,
+    id: "t5",
+    name: "Emily Zhang",
+    email: "emily.zhang@example.com",
+    phone: "(555) 567-8901",
+    location: "Seattle, WA",
+    subject: "English Literature",
+    specializations: ["Creative Writing", "Poetry", "Contemporary Literature"],
+    education: "M.F.A. in Creative Writing, University of Washington",
+    experience: 6,
+    statement:
+      "I believe in the power of stories to transform lives and develop critical thinking. My classroom is a place where diverse voices are celebrated.",
+    avatar: "/placeholder.svg?height=200&width=200",
+    appliedAt: "2023-11-18T10:30:00Z",
+  },
+  {
+    id: "t6",
+    name: "Robert Patel",
+    email: "robert.patel@example.com",
+    phone: "(555) 678-9012",
+    location: "Austin, TX",
+    subject: "Physics",
+    specializations: ["Mechanics", "Quantum Physics", "Astronomy"],
+    education: "Ph.D. in Physics, University of Texas",
+    experience: 9,
+    statement:
+      "Physics explains how our universe works, from the smallest particles to the largest galaxies. I make these concepts tangible through hands-on experiments.",
+    avatar: "/placeholder.svg?height=200&width=200",
+    appliedAt: "2023-11-13T15:45:00Z",
+  },
+  {
+    id: "t7",
+    name: "Sophia Martinez",
+    email: "sophia.martinez@example.com",
+    phone: "(555) 789-0123",
+    location: "Denver, CO",
+    subject: "Art",
+    specializations: ["Painting", "Digital Art", "Art History"],
+    education: "B.F.A. in Fine Arts, Rhode Island School of Design",
+    experience: 4,
+    statement:
+      "Art education develops creative problem-solving skills essential for any career path. I foster an inclusive studio environment where students can express themselves authentically.",
+    avatar: "/placeholder.svg?height=200&width=200",
+    appliedAt: "2023-11-19T09:00:00Z",
   },
 ]
-
-// Mock sessions
-export const sessions: Session[] = [
-  {
-    _id: "ses1",
-    teacherId: "t1",
-    studentId: "s1",
-    dateTime: new Date("2025-03-25T16:00:00"),
-    duration: 90, // 90 minutes
-    status: "accepted",
-    subject: "Mathematics - Calculus",
-  },
-  {
-    _id: "ses2",
-    teacherId: "t2",
-    studentId: "s1",
-    dateTime: new Date("2025-03-26T14:00:00"),
-    duration: 90,
-    status: "accepted",
-    subject: "Physics - Mechanics",
-  },
-  {
-    _id: "ses3",
-    teacherId: "t3",
-    studentId: "s1",
-    dateTime: new Date("2025-03-28T10:00:00"),
-    duration: 120,
-    status: "pending",
-    subject: "Computer Science - Data Structures",
-  },
-  {
-    _id: "ses4",
-    teacherId: "t1",
-    studentId: "s1",
-    dateTime: new Date("2025-03-20T15:00:00"),
-    duration: 90,
-    status: "completed",
-    subject: "Mathematics - Linear Algebra",
-  },
-  {
-    _id: "ses5",
-    teacherId: "t4",
-    studentId: "s1",
-    dateTime: new Date("2025-03-22T11:00:00"),
-    duration: 60,
-    status: "completed",
-    subject: "English - Academic Writing",
-  },
-  {
-    _id: "ses6",
-    teacherId: "t5",
-    studentId: "s1",
-    dateTime: new Date("2025-03-29T13:00:00"),
-    duration: 90,
-    status: "pending",
-    subject: "Chemistry - Organic Chemistry",
-  },
-  {
-    _id: "ses7",
-    teacherId: "t2",
-    studentId: "s1",
-    dateTime: new Date("2025-03-18T14:00:00"),
-    duration: 90,
-    status: "rejected",
-    subject: "Physics - Electromagnetism",
-  },
-]
-
-// Mock reviews
-export const reviews: Review[] = [
-  {
-    _id: "r1",
-    teacherId: "t1",
-    studentId: "s1",
-    rating: 5,
-    review:
-      "Dr. Fatima is an excellent teacher. She explains complex mathematical concepts in a very clear and understandable way.",
-  },
-  {
-    _id: "r2",
-    teacherId: "t2",
-    studentId: "s1",
-    rating: 4,
-    review:
-      "Prof. Imran has deep knowledge of physics and provides practical examples that help understand the theory.",
-  },
-  {
-    _id: "r3",
-    teacherId: "t4",
-    studentId: "s1",
-    rating: 5,
-    review: "Ali is a great English teacher. My writing skills have improved significantly after his sessions.",
-  },
-]
-
-// Helper function to get teacher by ID
-export function getTeacherById(id: string): Teacher | undefined {
-  return teachers.find((teacher) => teacher._id === id)
-}
-
-// Helper function to get sessions with populated teacher data
-export function getSessionsWithTeachers(): (Session & { teacher: Teacher })[] {
-  return sessions.map((session) => {
-    const teacher = getTeacherById(session.teacherId)
-    return {
-      ...session,
-      teacher: teacher!,
-    }
-  })
-}
-
-// Helper function to get reviews for a teacher
-export function getReviewsForTeacher(teacherId: string): Review[] {
-  return reviews.filter((review) => review.teacherId === teacherId)
-}
 

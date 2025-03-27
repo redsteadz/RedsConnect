@@ -63,11 +63,11 @@ export default function LoginPage() {
       toast.success("Login successful! Welcome back to EduConnect Pakistan.");
       let dashboard = "/dashboard";
       if (formData.type === "teacher") {
-        dashboard += "teacher";
+        dashboard += "/teacher";
       } else if (formData.type === "admin") {
-        dashboard += "admin";
+        dashboard += "/admin";
       } else if (formData.type === "student") {
-        dashboard += "student";
+        dashboard += "/student";
       }
       setIsAuth(true, resp.data.token, resp.data.type);
       router.push(dashboard);
