@@ -40,7 +40,10 @@ export default function TeacherDashboard() {
 
   const handleState = async (sessionID: string, state: string) => {
     const resp = await axios.post(`/api/sessions/${state}`, { sessionID });
-    const newState = state + (state in ["accept", "reject"] ? "ed" : "led");
+    let newState = state;
+    if (newState === "cancel") newState = "cancelled";
+    else newState += "ed";
+    console.log(newState);
     if (resp.status === 200) {
       const updatedSession: SessionType[] = sessions.map((session) => {
         if (session._id === sessionID) {
@@ -65,6 +68,7 @@ export default function TeacherDashboard() {
       year: "numeric",
       month: "short",
       day: "numeric",
+      timeZone: "UTC",
     }).format(date);
   };
 
@@ -74,6 +78,7 @@ export default function TeacherDashboard() {
       hour: "numeric",
       minute: "numeric",
       hour12: true,
+      timeZone: "UTC",
     }).format(date);
   };
 
@@ -171,9 +176,7 @@ export default function TeacherDashboard() {
                     <div key={session._id} className="border rounded-lg p-4">
                       <div className="flex justify-between items-start">
                         <div>
-                          <h3 className="font-medium">
-                            Mathematics - Calculus
-                          </h3>
+                          <h3 className="font-medium">{session.subject}</h3>
                           <p className="text-sm text-muted-foreground">
                             Student:{" "}
                             {typeof session.studentId === "object" &&
@@ -221,7 +224,7 @@ export default function TeacherDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {sessionRequest.map((session) => {
+                {sessions.map((session) => {
                   if (session.status !== "pending") return null;
                   return (
                     <div key={session._id} className="border rounded-lg p-4">
@@ -235,9 +238,13 @@ export default function TeacherDashboard() {
                           </p>
                           <div className="flex items-center mt-2 text-sm">
                             <Calendar className="h-4 w-4 mr-1" />
-                            <span>March 28, 2025</span>
+                            <span>
+                              {formatDate(new Date(session.dateTime))}
+                            </span>
                             <Clock className="h-4 w-4 ml-3 mr-1" />
-                            <span>5:00 PM - 6:30 PM</span>
+                            <span>
+                              {formatTime(new Date(session.dateTime))}
+                            </span>
                           </div>
                         </div>
                         <div className="flex space-x-2">

@@ -68,7 +68,7 @@ export default function HomePage() {
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3 lg:gap-12">
-              <div className="flex flex-col justify-center space-y-4">
+              <div className="flex flex-col items-center justify-center space-y-4">
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -87,15 +87,15 @@ export default function HomePage() {
                     <path d="M15.1 18H3"></path>
                   </svg>
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Find Tutors</h3>
-                  <p className="text-muted-foreground">
+                <div className="space-y-2 flex flex-col items-center justify-center">
+                  <h3 className="text-xl text-center font-bold">Find Tutors</h3>
+                  <p className="text-muted-foreground text-center">
                     Search and filter tutors based on subject, location, price,
                     and availability.
                   </p>
                 </div>
               </div>
-              <div className="flex flex-col justify-center space-y-4">
+              <div className="flex flex-col items-center justify-center space-y-4">
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -128,15 +128,17 @@ export default function HomePage() {
                     <path d="M16 18h.01"></path>
                   </svg>
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Book Sessions</h3>
-                  <p className="text-muted-foreground">
+                <div className="space-y-2 flex flex-col items-center">
+                  <h3 className="text-xl font-bold text-center">
+                    Book Sessions
+                  </h3>
+                  <p className="text-muted-foreground text-center">
                     Schedule and manage tutoring sessions with your preferred
                     tutors.
                   </p>
                 </div>
               </div>
-              <div className="flex flex-col justify-center space-y-4">
+              <div className="flex flex-col items-center justify-center space-y-4">
                 <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -155,9 +157,11 @@ export default function HomePage() {
                     <path d="M2 12l10 5 10-5"></path>
                   </svg>
                 </div>
-                <div className="space-y-2">
-                  <h3 className="text-xl font-bold">Track Progress</h3>
-                  <p className="text-muted-foreground">
+                <div className="space-y-2 flex flex-col items-center">
+                  <h3 className="text-xl font-bold text-center">
+                    Track Progress
+                  </h3>
+                  <p className="text-muted-foreground text-center">
                     Monitor your learning journey and manage your educational
                     goals.
                   </p>
