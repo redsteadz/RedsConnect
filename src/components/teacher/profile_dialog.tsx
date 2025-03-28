@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Star,
@@ -9,6 +9,8 @@ import {
   Briefcase,
   GraduationCap,
   Mail,
+  ChevronRight,
+  ChevronLeft,
 } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -129,28 +131,32 @@ export function ProfileDialog({ teacher }: { teacher: TeacherType }) {
       </span>
     );
   };
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  useRef;
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -300, behavior: "smooth" });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 300, behavior: "smooth" });
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="outline">Profile</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] overflow-hidden">
+      <DialogContent className="sm:max-w-[500px] overflow">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.3 }}
         >
-          <DialogHeader className="text-center">
-            <DialogTitle className="text-2xl font-bold">
-              Teacher Profile
-            </DialogTitle>
-            <DialogDescription>
-              View detailed information about this teacher
-            </DialogDescription>
-          </DialogHeader>
-
           <div className="mt-6 flex flex-col items-center">
             <Avatar className="h-24 w-24 mb-4">
               <AvatarImage alt={teacher.name} />
@@ -228,6 +234,49 @@ export function ProfileDialog({ teacher }: { teacher: TeacherType }) {
             </div>
           </div>
 
+          <div className="mt-6">
+            <h3 className="text-sm font-medium text-muted-foreground mb-3">
+              Student Reviews
+            </h3>
+
+            <div className="relative">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm shadow-sm"
+                onClick={scrollLeft}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+
+              {/* This div is the horizontally scrollable container for reviews */}
+              <div
+                ref={scrollContainerRef}
+                className="flex overflow-x-auto w-[500px] gap-3 py-2 px-4 -mx-4 scrollbar-hide"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+              >
+                {mockReviews.map((review) => (
+                  <motion.div
+                    key={review._id}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ReviewCard review={review} />
+                  </motion.div>
+                ))}
+              </div>
+
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm shadow-sm"
+                onClick={scrollRight}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
           <div className="mt-6 flex justify-end">
             <Button
               variant="outline"

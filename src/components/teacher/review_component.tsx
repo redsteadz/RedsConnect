@@ -34,9 +34,15 @@ export function ReviewCard({ review }: { review: ReviewType }) {
     typeof review.studentId === "object" ? review.studentId.name : "";
 
   return (
-    <Card className="border shadow-sm">
+    <Card className="min-w-[280px] max-w-[280px] border shadow-sm">
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
+          <Avatar className="h-8 w-8">
+            <AvatarImage src="/placeholder&width=500" alt={name} />
+            <AvatarFallback className="text-xs">
+              {name ? getInitials(name) : "A"}
+            </AvatarFallback>
+          </Avatar>
           <div className="flex-1">
             <div className="flex justify-between items-center">
               <p className="font-medium text-sm">{name}</p>
