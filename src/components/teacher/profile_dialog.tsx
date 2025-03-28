@@ -157,6 +157,12 @@ export function ProfileDialog({ teacher }: { teacher: TeacherType }) {
           exit={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.3 }}
         >
+          <DialogHeader className="text-center">
+            <DialogTitle className="text-2xl font-bold">
+              Teacher Profile
+            </DialogTitle>
+          </DialogHeader>
+
           <div className="mt-6 flex flex-col items-center">
             <Avatar className="h-24 w-24 mb-4">
               <AvatarImage alt={teacher.name} />
@@ -234,49 +240,56 @@ export function ProfileDialog({ teacher }: { teacher: TeacherType }) {
             </div>
           </div>
 
-          <div className="mt-6">
-            <h3 className="text-sm font-medium text-muted-foreground mb-3">
-              Student Reviews
-            </h3>
+          <Dialog>
+            <DialogTrigger>
+              <h3 className="text-sm font-medium text-muted-foreground mb-3">
+                Student Reviews
+              </h3>
+            </DialogTrigger>
 
-            <div className="relative">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm shadow-sm"
-                onClick={scrollLeft}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Button>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Reviews</DialogTitle>
+              </DialogHeader>
+              <div className="relative">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm shadow-sm"
+                  onClick={scrollLeft}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
 
-              {/* This div is the horizontally scrollable container for reviews */}
-              <div
-                ref={scrollContainerRef}
-                className="flex overflow-x-auto w-[500px] gap-3 py-2 px-4 -mx-4 scrollbar-hide"
-                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-              >
-                {mockReviews.map((review) => (
-                  <motion.div
-                    key={review._id}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <ReviewCard review={review} />
-                  </motion.div>
-                ))}
+                {/* This div is the horizontally scrollable container for reviews */}
+                <div
+                  ref={scrollContainerRef}
+                  className="flex overflow-x-auto w-[300px] sm:w-[500px] gap-3 py-2 px-4 -mx-4 scrollbar-hide"
+                  style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+                >
+                  {mockReviews.map((review) => (
+                    <motion.div
+                      key={review._id}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <ReviewCard review={review} />
+                    </motion.div>
+                  ))}
+                </div>
+
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm shadow-sm"
+                  onClick={scrollRight}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
               </div>
-
-              <Button
-                variant="ghost"
-                size="icon"
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm shadow-sm"
-                onClick={scrollRight}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+            </DialogContent>
+          </Dialog>
           <div className="mt-6 flex justify-end">
             <Button
               variant="outline"

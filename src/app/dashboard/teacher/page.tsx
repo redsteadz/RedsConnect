@@ -151,8 +151,8 @@ export default function TeacherDashboard() {
 
       <Tabs defaultValue="sessions" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="sessions">Upcoming Sessions</TabsTrigger>
-          <TabsTrigger value="requests">Session Requests</TabsTrigger>
+          <TabsTrigger value="sessions">Sessions</TabsTrigger>
+          <TabsTrigger value="requests">Requests</TabsTrigger>
           <TabsTrigger value="earnings">Earnings</TabsTrigger>
           <TabsTrigger value="profile">Profile</TabsTrigger>
         </TabsList>
@@ -179,18 +179,22 @@ export default function TeacherDashboard() {
                             {typeof session.studentId === "object" &&
                               session.studentId.name}
                           </p>
-                          <div className="flex items-center mt-2 text-sm">
-                            <Calendar className="h-4 w-4 mr-1" />
-                            <span>
-                              {formatDate(new Date(session.dateTime))}
-                            </span>
-                            <Clock className="h-4 w-4 ml-3 mr-1" />
-                            <span>
-                              {formatTime(new Date(session.dateTime))}
-                            </span>
+                          <div className="flex flex-col sm:flex-row mt-2 text-sm">
+                            <div className="flex sm:mr-4">
+                              <Calendar className="h-4 w-4 mr-1" />
+                              <span>
+                                {formatDate(new Date(session.dateTime))}
+                              </span>
+                            </div>
+                            <div className="flex">
+                              <Clock className="h-4 w-4 mr-1" />
+                              <span>
+                                {formatTime(new Date(session.dateTime))}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                        <div className="flex space-x-2">
+                        <div className="flex flex-col space-y-2">
                           <Button variant="outline" size="sm">
                             Reschedule
                           </Button>
@@ -233,18 +237,22 @@ export default function TeacherDashboard() {
                             {typeof session.studentId === "object" &&
                               session.studentId.name}
                           </p>
-                          <div className="flex items-center mt-2 text-sm">
-                            <Calendar className="h-4 w-4 mr-1" />
-                            <span>
-                              {formatDate(new Date(session.dateTime))}
-                            </span>
-                            <Clock className="h-4 w-4 ml-3 mr-1" />
-                            <span>
-                              {formatTime(new Date(session.dateTime))}
-                            </span>
+                          <div className="flex flex-col sm:flex-row mt-2 text-sm">
+                            <div className="flex sm:mr-4">
+                              <Calendar className="h-4 w-4 mr-1" />
+                              <span>
+                                {formatDate(new Date(session.dateTime))}
+                              </span>
+                            </div>
+                            <div className="flex">
+                              <Clock className="h-4 w-4 mr-1" />
+                              <span>
+                                {formatTime(new Date(session.dateTime))}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                        <div className="flex space-x-2">
+                        <div className="flex flex-col space-y-2">
                           {/* The submit button accepts the given session */}
                           <Button
                             variant="default"

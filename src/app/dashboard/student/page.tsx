@@ -20,6 +20,7 @@ import axios from "axios";
 import TeacherCard from "@/components/teacher/card";
 import { SessionType } from "@/models/sessions";
 import { toast } from "sonner";
+import { ReviewDialog } from "@/components/teacher/review_dialog";
 
 export default function StudentDashboard() {
   const [activeTab, setActiveTab] = useState("sessions");
@@ -100,7 +101,6 @@ export default function StudentDashboard() {
       timeZone: "UTC",
     }).format(date);
   };
-
   const handleCancelSession = async (sessionID: string) => {
     const resp = await axios.post(`/api/sessions/cancel`, { sessionID });
     if (resp.status !== 200) {
@@ -145,6 +145,30 @@ export default function StudentDashboard() {
       default:
         return "bg-gray-500";
     }
+  };
+
+  const submitReview = async (
+    rating: number,
+    review: string,
+    stdID: string,
+    tchID: string,
+  ) => {
+    const resp = await axios.post(
+      `/api/review`,
+      {
+        rating,
+        review,
+        stdID,
+        tchID,
+      },
+      {
+        validateStatus: (status) => status < 500,
+      },
+    );
+    if (resp.status !== 201) {
+      toast.error("Error submitting review");
+    }
+    toast.success("Review submitted successfully");
   };
 
   return (
@@ -241,111 +265,125 @@ export default function StudentDashboard() {
                           {session.duration} mins
                         </div>
                       </div>
+                      <div className="flex items-center mx-2 gap-2 justify-between">
+                        <div>
+                          <h3 className="font-semibold text-base line-clamp-1">
+                            {session.subject}
+                          </h3>
 
-                      <h3 className="font-semibold text-base line-clamp-1">
-                        {session.subject}
-                      </h3>
-
-                      <div className="flex items-center mt-2 mb-3">
-                        {typeof session.teacherId === "object" && (
-                          <div>
-                            <Avatar className="w-6 h-6 mr-2">
-                              <AvatarImage
-                                src="/placeholder.svg"
-                                alt={session.teacherId.name}
-                              />
-                              <AvatarFallback className="text-xs">
-                                {session.teacherId.name
-                                  .split(" ")
-                                  .map((n) => n[0])
-                                  .join("")}
-                              </AvatarFallback>
-                            </Avatar>
-                            <span className="text-sm text-muted-foreground">
-                              {session.teacherId.name}
-                            </span>
+                          <div className="flex items-center mt-2 mb-3">
+                            {typeof session.teacherId === "object" && (
+                              <div>
+                                <Avatar className="w-6 h-6 mr-2">
+                                  <AvatarImage
+                                    src="/placeholder.svg"
+                                    alt={session.teacherId.name}
+                                  />
+                                  <AvatarFallback className="text-xs">
+                                    {session.teacherId.name
+                                      .split(" ")
+                                      .map((n) => n[0])
+                                      .join("")}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <span className="text-sm text-muted-foreground">
+                                  {session.teacherId.name}
+                                </span>
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-
-                      <div className="flex flex-col gap-1 text-xs text-muted-foreground mb-3">
-                        <div className="flex items-center">
-                          <CalendarIcon className="mr-2 h-3 w-3" />
-                          <span>{formatDate(new Date(session.dateTime))}</span>
+                          <div className="flex flex-col gap-1 text-xs text-muted-foreground mb-3">
+                            <div className="flex items-center">
+                              <CalendarIcon className="mr-2 h-3 w-3" />
+                              <span>
+                                {formatDate(new Date(session.dateTime))}
+                              </span>
+                            </div>
+                            <div className="flex items-center">
+                              <Clock className="mr-2 h-3 w-3" />
+                              <span>
+                                {formatTime(new Date(session.dateTime))}
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex items-center">
-                          <Clock className="mr-2 h-3 w-3" />
-                          <span>{formatTime(new Date(session.dateTime))}</span>
-                        </div>
-                      </div>
 
-                      <div className="flex flex-wrap gap-2 mt-auto">
-                        {session.status === "pending" && (
-                          <>
+                        <div className="flex flex-col gap-2 mt-auto">
+                          {session.status === "pending" && (
+                            <>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="h-8 text-xs px-2"
+                              >
+                                Reschedule
+                              </Button>{" "}
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                className="h-8 text-xs px-2"
+                                onClick={() => {
+                                  handleCancelSession(session._id!);
+                                }}
+                              >
+                                Cancel
+                              </Button>
+                            </>
+                          )}
+                          {session.status === "accepted" && (
+                            <>
+                              <Button size="sm" className="h-8 text-xs px-2">
+                                Join
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="h-8 text-xs px-2"
+                              >
+                                Message
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="destructive"
+                                className="h-8 text-xs px-2"
+                                onClick={() => {
+                                  handleCancelSession(session._id!);
+                                }}
+                              >
+                                Cancel
+                              </Button>
+                            </>
+                          )}
+                          {session.status === "completed" && (
+                            <ReviewDialog
+                              onSubmit={(rating, review) => {
+                                const stdID = session.studentId as string;
+                                const tchID =
+                                  typeof session.teacherId === "object"
+                                    ? session.teacherId._id
+                                    : "error";
+                                submitReview(
+                                  rating,
+                                  review,
+                                  stdID,
+                                  tchID || "",
+                                );
+                              }}
+                            />
+                          )}
+                          {session.status === "cancelled" && (
                             <Button
                               size="sm"
                               variant="destructive"
                               className="h-8 text-xs px-2"
                               onClick={() => {
-                                handleCancelSession(session._id!);
+                                handleDeleteSession(session._id!);
                               }}
                             >
-                              Cancel
+                              DELETE
                             </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="h-8 text-xs px-2"
-                            >
-                              Reschedule
-                            </Button>
-                          </>
-                        )}
-                        {session.status === "accepted" && (
-                          <>
-                            <Button size="sm" className="h-8 text-xs px-2">
-                              Join
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="h-8 text-xs px-2"
-                            >
-                              Message
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="destructive"
-                              className="h-8 text-xs px-2"
-                              onClick={() => {
-                                handleCancelSession(session._id!);
-                              }}
-                            >
-                              Cancel
-                            </Button>
-                          </>
-                        )}
-                        {session.status === "completed" && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="h-8 text-xs px-2"
-                          >
-                            Leave Review
-                          </Button>
-                        )}
-                        {session.status === "cancelled" && (
-                          <Button
-                            size="sm"
-                            variant="destructive"
-                            className="h-8 text-xs px-2"
-                            onClick={() => {
-                              handleDeleteSession(session._id!);
-                            }}
-                          >
-                            DELETE
-                          </Button>
-                        )}
+                          )}
+                        </div>
                       </div>
                     </CardContent>
                   </Card>

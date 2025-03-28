@@ -34,7 +34,7 @@ export function ReviewCard({ review }: { review: ReviewType }) {
     typeof review.studentId === "object" ? review.studentId.name : "";
 
   return (
-    <Card className="min-w-[280px] max-w-[280px] border shadow-sm">
+    <Card className="max-w-[280px] border shadow-sm">
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
           <Avatar className="h-8 w-8">
