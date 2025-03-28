@@ -28,6 +28,7 @@ import { useRef, useState } from "react";
 import axios from "axios";
 import { SessionType } from "@/models/sessions";
 import { toast } from "sonner";
+import { ProfileDialog } from "./profile_dialog";
 
 //<SelectItem value="21:00">09:00 PM</SelectItem>
 //<SelectItem value="16:00">04:00 PM</SelectItem>
@@ -170,9 +171,7 @@ export default function TeacherCard({
         <div className="mt-4 flex items-center justify-between">
           <div className="text-sm font-medium">Rs. {teacher.hourlyRate}/hr</div>
           <div className="flex gap-2">
-            <Button size="sm" variant="outline">
-              Profile
-            </Button>
+            <ProfileDialog teacher={teacher} />
             <Drawer>
               <DrawerTrigger asChild>
                 <Button size="sm">Book Session</Button>
