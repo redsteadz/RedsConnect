@@ -1,123 +1,91 @@
-export interface TeacherApplication {
-  id: string
-  name: string
-  email: string
-  phone: string
-  location: string
-  subject: string
-  specializations: string[]
-  education: string
-  experience: number
-  statement: string
-  avatar: string
-  appliedAt: string
-}
+import { TeacherType } from "@/models/teacher";
 
-export const mockTeacherApplications: TeacherApplication[] = [
+export const mockTeacherApplications: TeacherType[] = [
   {
-    id: "t1",
-    name: "Dr. Sarah Johnson",
-    email: "sarah.johnson@example.com",
-    phone: "(555) 123-4567",
-    location: "Boston, MA",
-    subject: "Mathematics",
-    specializations: ["Calculus", "Statistics", "Algebra"],
-    education: "Ph.D. in Mathematics, MIT",
-    experience: 8,
-    statement:
-      "I believe in making complex mathematical concepts accessible to all students through real-world applications and visual learning techniques.",
-    avatar: "/placeholder.svg?height=200&width=200",
-    appliedAt: "2023-11-15T14:30:00Z",
+    _id: "t1",
+    name: "Alice Thompson",
+    qualifications: ["Ph.D. in Mathematics", "M.Sc. in Statistics"],
+    bio: "Passionate about making complex math simple and engaging for students.",
+    yoe: 10,
+    subjects: ["Mathematics", "Statistics"],
+    hourlyRate: 50,
+    averageRating: 4.8,
+    availability: ["online", "both"],
+    status: "pending",
   },
   {
-    id: "t2",
-    name: "Michael Chen",
-    email: "michael.chen@example.com",
-    phone: "(555) 234-5678",
-    location: "San Francisco, CA",
-    subject: "Computer Science",
-    specializations: ["Programming", "Web Development", "AI"],
-    education: "M.S. in Computer Science, Stanford University",
-    experience: 5,
-    statement:
-      "My teaching philosophy centers around project-based learning, allowing students to build real applications while mastering programming concepts.",
-    avatar: "/placeholder.svg?height=200&width=200",
-    appliedAt: "2023-11-16T09:15:00Z",
+    status: "pending",
+    _id: "t2",
+    name: "David Lee",
+    qualifications: [
+      "M.S. in Computer Science",
+      "B.S. in Software Engineering",
+    ],
+    bio: "Experienced software engineer turned educator, focusing on practical coding skills.",
+    yoe: 6,
+    subjects: ["Computer Science", "Web Development"],
+    hourlyRate: 40,
+    averageRating: 4.6,
+    availability: ["in-person", "both"],
   },
   {
-    id: "t3",
-    name: "Dr. Amara Okafor",
-    email: "amara.okafor@example.com",
-    phone: "(555) 345-6789",
-    location: "Chicago, IL",
-    subject: "Biology",
-    specializations: ["Molecular Biology", "Genetics", "Ecology"],
-    education: "Ph.D. in Biological Sciences, University of Chicago",
-    experience: 10,
-    statement:
-      "I strive to inspire scientific curiosity by connecting classroom learning to current research and environmental challenges facing our world today.",
-    avatar: "/placeholder.svg?height=200&width=200",
-    appliedAt: "2023-11-14T11:45:00Z",
-  },
-  {
-    id: "t4",
-    name: "James Rodriguez",
-    email: "james.rodriguez@example.com",
-    phone: "(555) 456-7890",
-    location: "Miami, FL",
-    subject: "History",
-    specializations: ["World History", "American History", "Political Science"],
-    education: "M.A. in History, University of Florida",
-    experience: 7,
-    statement:
-      "History is more than dates and facts—it's about understanding human experiences and learning from our past to create a better future.",
-    avatar: "/placeholder.svg?height=200&width=200",
-    appliedAt: "2023-11-17T13:20:00Z",
-  },
-  {
-    id: "t5",
-    name: "Emily Zhang",
-    email: "emily.zhang@example.com",
-    phone: "(555) 567-8901",
-    location: "Seattle, WA",
-    subject: "English Literature",
-    specializations: ["Creative Writing", "Poetry", "Contemporary Literature"],
-    education: "M.F.A. in Creative Writing, University of Washington",
-    experience: 6,
-    statement:
-      "I believe in the power of stories to transform lives and develop critical thinking. My classroom is a place where diverse voices are celebrated.",
-    avatar: "/placeholder.svg?height=200&width=200",
-    appliedAt: "2023-11-18T10:30:00Z",
-  },
-  {
-    id: "t6",
-    name: "Robert Patel",
-    email: "robert.patel@example.com",
-    phone: "(555) 678-9012",
-    location: "Austin, TX",
-    subject: "Physics",
-    specializations: ["Mechanics", "Quantum Physics", "Astronomy"],
-    education: "Ph.D. in Physics, University of Texas",
-    experience: 9,
-    statement:
-      "Physics explains how our universe works, from the smallest particles to the largest galaxies. I make these concepts tangible through hands-on experiments.",
-    avatar: "/placeholder.svg?height=200&width=200",
-    appliedAt: "2023-11-13T15:45:00Z",
-  },
-  {
-    id: "t7",
+    status: "pending",
+    _id: "t3",
     name: "Sophia Martinez",
-    email: "sophia.martinez@example.com",
-    phone: "(555) 789-0123",
-    location: "Denver, CO",
-    subject: "Art",
-    specializations: ["Painting", "Digital Art", "Art History"],
-    education: "B.F.A. in Fine Arts, Rhode Island School of Design",
-    experience: 4,
-    statement:
-      "Art education develops creative problem-solving skills essential for any career path. I foster an inclusive studio environment where students can express themselves authentically.",
-    avatar: "/placeholder.svg?height=200&width=200",
-    appliedAt: "2023-11-19T09:00:00Z",
+    qualifications: ["M.A. in Fine Arts", "B.A. in Art History"],
+    bio: "Helping students explore their creative potential through traditional and digital mediums.",
+    yoe: 5,
+    subjects: ["Art", "Art History"],
+    hourlyRate: 35,
+    averageRating: 4.7,
+    availability: ["online", "in-person"],
   },
-]
-
+  {
+    status: "pending",
+    _id: "t4",
+    name: "James Rodriguez",
+    qualifications: ["M.A. in History", "B.A. in Political Science"],
+    bio: "Dedicated to making history come alive with engaging storytelling and analysis.",
+    yoe: 8,
+    subjects: ["History", "Political Science"],
+    hourlyRate: 45,
+    averageRating: 4.5,
+    availability: ["both"],
+  },
+  {
+    status: "pending",
+    _id: "t5",
+    name: "Emily Zhang",
+    qualifications: ["M.F.A. in Creative Writing", "B.A. in Literature"],
+    bio: "Empowering students to express themselves through storytelling and critical analysis.",
+    yoe: 7,
+    subjects: ["English Literature", "Creative Writing"],
+    hourlyRate: 38,
+    averageRating: 4.9,
+    availability: ["online"],
+  },
+  {
+    status: "pending",
+    _id: "t6",
+    name: "Robert Patel",
+    qualifications: ["Ph.D. in Physics", "M.Sc. in Astronomy"],
+    bio: "Bringing physics to life through experiments and real-world applications.",
+    yoe: 12,
+    subjects: ["Physics", "Astronomy"],
+    hourlyRate: 55,
+    averageRating: 4.8,
+    availability: ["in-person"],
+  },
+  {
+    status: "pending",
+    _id: "t7",
+    name: "Amara Okafor",
+    qualifications: ["Ph.D. in Biological Sciences", "M.Sc. in Genetics"],
+    bio: "Inspiring curiosity about the natural world through hands-on learning and research insights.",
+    yoe: 9,
+    subjects: ["Biology", "Genetics"],
+    hourlyRate: 48,
+    averageRating: 4.7,
+    availability: ["both"],
+  },
+];

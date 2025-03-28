@@ -23,7 +23,9 @@ export async function GET(req: NextRequest) {
         .findById(_id)
         .select("-password")) as StudentType;
     } else if (type === "teacher") {
-      profile = await teacherModel.findById(_id);
+      profile = (await teacherModel
+        .findById(_id)
+        .select("-password")) as TeacherType;
     }
     return NextResponse.json(
       { message: "Profile found", profile },

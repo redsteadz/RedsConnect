@@ -10,8 +10,9 @@ export async function GET(req: NextRequest) {
     if (!token) {
       return NextResponse.redirect("/login");
     }
+    const status = type === "admin" ? "pending" : "approved";
     let profiles: TeacherType[] = (await teacherModel
-      .find({})
+      .find({ status })
       .select("-password")) as TeacherType[];
 
     return NextResponse.json(

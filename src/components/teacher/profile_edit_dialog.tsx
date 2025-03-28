@@ -31,20 +31,24 @@ import { TeacherType } from "@/models/teacher";
 
 import axios from "axios";
 
-export default function TeacherSignupPage() {
+export function ProfileEdit({ teacher }: { teacher: TeacherType | undefined }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  if (!teacher) {
+    return <div>Teacher not found</div>;
+  }
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
+    _id: teacher._id!,
+    name: teacher.name,
+    email: teacher.email ?? "",
     password: "",
     confirmPassword: "",
-    qualification: "",
-    hourlyRate: 500,
-    experience: "",
-    bio: "",
-    subjects: [] as string[],
-    availability: ["online" as "online" | "in-person" | "both"],
+    qualification: teacher.qualifications.join(" "),
+    hourlyRate: teacher.hourlyRate,
+    experience: teacher.yoe.toString(),
+    bio: teacher.bio,
+    subjects: teacher.subjects,
+    availability: teacher.availability,
   });
 
   const subjects = [
@@ -130,6 +134,7 @@ export default function TeacherSignupPage() {
       // For now, we'll simulate a successful registration
       await new Promise((resolve) => setTimeout(resolve, 1500));
       const teacherObject: TeacherType = {
+        _id: formData._id,
         name: formData.name,
         email: formData.email,
         password: formData.password,
@@ -141,36 +146,30 @@ export default function TeacherSignupPage() {
         availability: formData.availability,
         status: "pending",
       };
-      const resp = await axios.post("/api/teachers/signup", teacherObject, {
+      const resp = await axios.post("/api/edit/teacher", teacherObject, {
         validateStatus: (status) => status < 500,
       });
       //console.log(resp)
       if (resp.status !== 200) {
-        toast.error("Registration failed:" + resp.data.message);
+        toast.error("Edit failed:" + resp.data.message);
         throw new Error(resp.data.message);
       }
-      toast.success(
-        "Registration successful! Your account has been created. You can now login.",
-      );
+      toast.success("Edit successful! Your account has been edited.");
       // Redirect to login page after successful registration
       router.push("/login");
     } catch (error: any) {
       //console.log(error)
-      toast.error("Registration failed." + error.message);
+      toast.error("Edit failed." + error.message);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="mx-auto container py-10">
-      <Card className="max-w-2xl mx-auto">
+    <div className="container">
+      <Card className="w-full">
         <CardHeader>
-          <CardTitle>Teacher Registration</CardTitle>
-          <CardDescription>
-            Create your teacher account to start offering tutoring services on
-            EduConnect Pakistan
-          </CardDescription>
+          <CardTitle>Edit Profile</CardTitle>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-6">
@@ -331,7 +330,7 @@ export default function TeacherSignupPage() {
                   <SelectTrigger>
                     <SelectValue placeholder="Select teaching mode" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent defaultValue={formData.availability}>
                     <SelectItem value="online">Online Only</SelectItem>
                     <SelectItem value="in-person">In-Person Only</SelectItem>
                     <SelectItem value="both">
@@ -344,17 +343,8 @@ export default function TeacherSignupPage() {
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Creating Account..." : "Create Account"}
+              {isLoading ? "Editing Account..." : "Edit Account"}
             </Button>
-            <div className="text-center text-sm">
-              Already have an account?{" "}
-              <Link
-                href="/login"
-                className="underline underline-offset-4 hover:text-primary"
-              >
-                Login
-              </Link>
-            </div>
           </CardFooter>
         </form>
       </Card>

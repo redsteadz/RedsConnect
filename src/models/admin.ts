@@ -16,6 +16,6 @@ const adminSchema = new Schema({
   position: { type: String, required: true },
 });
 
-const adminModel = models.student ?? model("admin", adminSchema);
+const adminModel = models.admin ?? model("admin", adminSchema);
 
 export default adminModel;

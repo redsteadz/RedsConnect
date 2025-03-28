@@ -13,27 +13,24 @@ import { Calendar, Clock, DollarSign, Users } from "lucide-react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { SessionType } from "@/models/sessions";
+import { ProfileEdit } from "@/components/teacher/profile_edit_dialog";
+import { TeacherType } from "@/models/teacher";
 
 export default function TeacherDashboard() {
   // Get all the sessions
   // Retrieve all sessions
   const [sessions, setSessions] = useState<SessionType[]>([]);
-  const [upcomingSessions, setUpcomingSessions] = useState<SessionType[]>([]);
-  const [sessionRequest, setSessionRequests] = useState<SessionType[]>([]);
+  const [teacher, setTeacher] = useState<TeacherType>();
+
   useEffect(() => {
     const fetchSessions = async () => {
       const resp = await axios.get("/api/sessions/getAll");
       const sessions: SessionType[] = resp.data.sessions;
       setSessions(sessions);
       // Filter out the pending sessions
-      const sessionsRequests = sessions.filter(
-        (session) => session.status === "pending",
-      );
-      const upcomingSessions = sessions.filter((session) => {
-        return session.status === "accepted";
-      });
-      setSessionRequests(sessionsRequests);
-      setUpcomingSessions(upcomingSessions);
+      const resp2 = await axios.get("/api/me");
+      const teacher: TeacherType = resp2.data.profile;
+      setTeacher(teacher);
     };
     fetchSessions();
   }, []);
@@ -324,17 +321,7 @@ export default function TeacherDashboard() {
         </TabsContent>
 
         <TabsContent value="profile" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Profile Management</CardTitle>
-              <CardDescription>
-                Update your profile information and teaching preferences
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button>Edit Profile</Button>
-            </CardContent>
-          </Card>
+          <ProfileEdit teacher={teacher} />
         </TabsContent>
       </Tabs>
     </div>

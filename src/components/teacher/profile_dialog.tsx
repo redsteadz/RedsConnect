@@ -23,38 +23,52 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
+import { TeacherType } from "@/models/teacher";
+import { ReviewType } from "@/models/reviews";
+import { ReviewCard } from "./review_component";
 
-export interface TeacherType {
-  _id?: string;
-  name: string;
-  email?: string;
-  password?: string;
-  qualifications: string[];
-  bio: string;
-  yoe: number;
-  subjects: string[];
-  hourlyRate: number;
-  averageRating?: number;
-  availability: ("online" | "in-person" | "both")[];
-  avatarUrl?: string;
-}
-
-const mockTeacher: TeacherType = {
-  _id: "t123456",
-  name: "Dr. Sarah Johnson",
-  qualifications: [
-    "Ph.D. in Mathematics",
-    "M.Sc. in Computer Science",
-    "B.Sc. in Physics",
-  ],
-  bio: "Passionate educator with over 10 years of experience teaching mathematics and computer science. I specialize in making complex concepts accessible to students of all levels.",
-  yoe: 10,
-  subjects: ["Mathematics", "Computer Science", "Data Science", "Statistics"],
-  hourlyRate: 65,
-  averageRating: 4.8,
-  availability: ["online", "in-person"],
-  avatarUrl: "/placeholder.svg?height=200&width=200",
-};
+const mockReviews: ReviewType[] = [
+  {
+    _id: "r1",
+    teacherId: "t123456",
+    studentId: "s1",
+    rating: 5,
+    review:
+      "Dr. Johnson is an exceptional teacher. She explains complex mathematical concepts in a way that's easy to understand. I've improved significantly in just a few sessions.",
+  },
+  {
+    _id: "r2",
+    teacherId: "t123456",
+    studentId: "s2",
+    rating: 4,
+    review:
+      "Very knowledgeable in statistics. Helped me prepare for my final exam and I got an A. Would definitely recommend for any math-related subjects.",
+  },
+  {
+    _id: "r3",
+    teacherId: "t123456",
+    studentId: "s3",
+    rating: 5,
+    review:
+      "Dr. Sarah is patient and thorough. She tailors her teaching style to match your learning pace. Her background in both math and computer science makes her perfect for helping with my data science coursework.",
+  },
+  {
+    _id: "r4",
+    teacherId: "t123456",
+    studentId: "s4",
+    rating: 4.5,
+    review:
+      "I was struggling with calculus until I started lessons with Dr. Johnson. She has a gift for making difficult concepts accessible. Highly recommend!",
+  },
+  {
+    _id: "r5",
+    teacherId: "t123456",
+    studentId: "s5",
+    rating: 5,
+    review:
+      "Excellent teacher! Dr. Johnson helped me prepare for my college entrance exams and I got into my first-choice school. She knows how to motivate students and build confidence.",
+  },
+];
 
 export function ProfileDialog({ teacher }: { teacher: TeacherType }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -139,7 +153,7 @@ export function ProfileDialog({ teacher }: { teacher: TeacherType }) {
 
           <div className="mt-6 flex flex-col items-center">
             <Avatar className="h-24 w-24 mb-4">
-              <AvatarImage src={teacher.avatarUrl} alt={teacher.name} />
+              <AvatarImage alt={teacher.name} />
               <AvatarFallback className="text-lg">
                 {getInitials(teacher.name)}
               </AvatarFallback>

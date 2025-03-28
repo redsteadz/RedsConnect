@@ -14,13 +14,13 @@ await connect();
 export async function POST(req: NextRequest) {
   try {
     const { email, password, type } = await req.json();
-    let profile: StudentType | TeacherType | null = null;
+    let profile: StudentType | TeacherType | AdminType | null = null;
     if (type === "student") {
       profile = await stdModel.findOne({ email });
     } else if (type === "teacher") {
       profile = await teacherModel.findOne({ email });
     } else if (type === "admin") {
-      // Add the admin model and type here
+      console.log("Searching in admin");
       profile = await adminModel.findOne({ email });
     }
     console.log(profile, type);

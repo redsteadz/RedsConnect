@@ -22,6 +22,7 @@ export interface TeacherType {
   hourlyRate: number;
   averageRating?: number;
   availability: ("online" | "in-person" | "both")[];
+  status: "approved" | "pending" | "rejected";
 }
 
 const teacherSchema = new Schema({
@@ -37,6 +38,11 @@ const teacherSchema = new Schema({
   availability: [
     { type: String, enum: ["online", "in-person"], required: true },
   ],
+  status: {
+    type: String,
+    enum: ["approved", "pending", "rejected"],
+    default: "pending",
+  },
 });
 
 const teacherModel = models.teacher ?? model("teacher", teacherSchema);
